@@ -1,3 +1,4 @@
+import 'package:adcast/app/controller/keyword/keyword_controller.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 
@@ -10,10 +11,17 @@ class MainPage extends GetView<MainController> {
 
   @override
   Widget build(BuildContext context) {
+    final int keywordIndex = AppPages.navigationScreensProperties.indexWhere(
+      (element) => element["route"] == Routes.keyword,
+    );
+
     return GetX<MainController>(
       builder: (_) => Scaffold(
         appBar: AppBar(
-          title: const Text('Main Page'),
+          title: Text(
+            AppPages.navigationScreensProperties[_.currentIndex]['title'],
+          ),
+          centerTitle: true,
         ),
         body: SafeArea(
           child: PageView(

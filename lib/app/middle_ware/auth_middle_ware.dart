@@ -16,17 +16,18 @@ class AuthMiddleWare extends GetMiddleware {
 
   @override
   RouteSettings? redirect(String? route) {
-    final AuthService authService = Get.find<AuthService>();
-    authService.loginCheck();
+    AuthService.to.loginCheck().then((value) {
+      if (AuthService.to.authenticated ||
+          route == Routes.login ||
+          route == Routes.initial) {
+        return null;
+      } else {
+        Future.delayed(const Duration(seconds: 1),
+            () => Get.snackbar("Warning", "You must login"));
+        return const RouteSettings(name: Routes.login);
+      }
+    });
 
-    if (authService.authenticated ||
-        route == Routes.login ||
-        route == Routes.initial) {
-      return null;
-    } else {
-      Future.delayed(const Duration(seconds: 1),
-          () => Get.snackbar("Warning", "You must login"));
-      return const RouteSettings(name: Routes.login);
-    }
+    return null;
   }
 }

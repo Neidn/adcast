@@ -4,6 +4,8 @@ import '/app/data/model/api/api_ad_keyword_request.dart';
 
 import '/app/data/model/api/api_ad_keyword_response.dart';
 
+import '/app/services/auth_service.dart';
+
 class AdKeywordImpl {
   final _client = RestClient(dio);
 
@@ -16,11 +18,18 @@ class AdKeywordImpl {
     String page,
   ) async {
     try {
+      await AuthService.to.sessionDeviceToken();
+
       ApiAdKeywordResponse apiAdKeywordResponse = await _client.getKeyword(
           deviceToken, cid, camId, grId, pageSize, page);
 
       if (apiAdKeywordResponse.apiResponseCodeCheck() == false) {
-        throw Exception(apiAdKeywordResponse.response);
+        if (apiAdKeywordResponse.apiResponseLogoutCheck() == true) {
+          await AuthService.to.logout();
+          throw Exception("Session Expired");
+        } else {
+          throw Exception(apiAdKeywordResponse.response);
+        }
       }
 
       if (apiAdKeywordResponse.apiResponseEmptyCheck() == true) {

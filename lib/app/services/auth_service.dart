@@ -3,18 +3,32 @@ import 'package:flutter_native_splash/flutter_native_splash.dart';
 
 import '/app/routes/app_pages.dart';
 
-import '/app/storage/user/customer_data_storage.dart';
-import '/app/storage/user/user_data_storage.dart';
+import '/app/utils/global_variables.dart';
+
+import '/app/data/model/api/api_auth.dart';
+import '/app/data/model/api/api_response.dart';
+
+import '/app/data/repository/api_auth_impl.dart';
 
 import '/app/storage/device/device_token_storage.dart';
 
-import '/app/storage/campaign/campaign_list_data_storage.dart';
-import '/app/storage/campaign/group_list_data_storage.dart';
-
-import '/app/storage/keyword/keyword_info_storage.dart';
-import '/app/storage/keyword/keyword_list_data_storage.dart';
+import '/app/storage/db/campaigns_table.dart';
+import '/app/storage/db/groups_table.dart';
+import '/app/storage/db/keyword_info_table.dart';
+import '/app/storage/db/keywords_table.dart';
+import '/app/storage/db/user_info_table.dart';
 
 class AuthService extends GetxService {
+  static AuthService get to => Get.find();
+
+  // Database table
+  final UserInfoTable userInfoTable = UserInfoTable(appUserInfoTable);
+  final CampaignsTable campaignsTable = CampaignsTable(appCampaignsTable);
+  final GroupsTable groupsTable = GroupsTable(appGroupsTable);
+  final KeywordInfoTable keywordInfoTable =
+      KeywordInfoTable(appKeywordInfoTable);
+  final KeywordsTable keywordsTable = KeywordsTable(appKeywordsTable);
+
   // Authenticated
   final RxBool _authenticated = false.obs;
 
@@ -22,13 +36,26 @@ class AuthService extends GetxService {
 
   set authenticated(value) => _authenticated.value = value;
 
+  // loading
+  final RxBool _isLoading = false.obs;
+
+  bool get isLoading => _isLoading.value;
+
+  set isLoading(bool value) => _isLoading.value = value;
+
+  // Device Token
+  final RxString _deviceToken = ''.obs;
+
+  String get deviceToken => _deviceToken.value;
+
+  set deviceToken(String value) => _deviceToken.value = value;
+
   @override
   void onInit() async {
-    // User Data Check
     try {
-      if (checkAllStorage() == true) {
-        login();
-      } else {
+      // User Login Check
+      await sessionDeviceToken();
+      if (authenticated == false) {
         await logout();
       }
     } catch (e) {
@@ -44,38 +71,33 @@ class AuthService extends GetxService {
     super.onReady();
   }
 
-  void login() {
-    authenticated = true;
-  }
-
   Future<void> logout() async {
+    authenticated = false;
+
     // Campaign Storage
-    await campaignListDataStorage.resetCampaignListData();
-    await groupListDataStorage.resetGroupListData();
+    await campaignsTable.deleteAll();
+    await groupsTable.deleteAll();
 
     // Device Storage
-    await deviceTokenStorage.resetDeviceToken();
+    resetDeviceToken();
 
     // Keyword Storage
-    await keywordListDataStorage.resetKeywordListData();
-    await keywordInfoStorage.resetKeywordInfo();
+    await keywordsTable.deleteAll();
+    await keywordInfoTable.deleteAll();
 
     // User Storage
-    await userDataStorage.resetUserData();
-    await customerDataStorage.resetCustomerData();
+    await userInfoTable.deleteAll();
 
-    loginCheck();
-
-    if (authenticated == false) {
-      Get.offAllNamed(Routes.login);
-    }
+    Get.offAllNamed(Routes.login);
   }
 
   // login check
-  void loginCheck() {
+  Future<void> loginCheck() async {
     try {
+      int userInfoCount = await userInfoTable.queryRowCount();
+
       if (deviceTokenStorage.emptyDeviceTokenCheck() == true ||
-          userDataStorage.emptyUserDataCheck() == true) {
+          userInfoCount != 1) {
         authenticated = false;
       } else {
         authenticated = true;
@@ -85,14 +107,50 @@ class AuthService extends GetxService {
     }
   }
 
-  bool checkAllStorage() {
-    if (userDataStorage.emptyUserDataCheck() == false &&
-        customerDataStorage.emptyCustomerDataCheck() == false &&
-        campaignListDataStorage.emptyCampaignListDataCheck() == false &&
-        groupListDataStorage.emptyGroupListDataCheck() == false) {
-      return true;
-    } else {
-      return false;
+  void resetDeviceToken() {
+    deviceToken = '';
+    deviceTokenStorage.deviceToken = '';
+  }
+
+  void setDeviceToken(String value) {
+    deviceToken = value;
+    deviceTokenStorage.deviceToken = value;
+  }
+
+  Future<void> sessionDeviceToken() async {
+    isLoading = true;
+    ApiAuthImpl apiAuthImpl = ApiAuthImpl();
+
+    try {
+      if (deviceToken.isEmpty == true) {
+        throw Exception('Empty Device Token');
+      }
+
+      ApiResponse apiResponse = await apiAuthImpl.getSessionCheck(deviceToken);
+
+      if (apiResponse.apiResponseEmptyCheck() == true) {
+        throw Exception('Empty Response');
+      }
+
+      ApiAuth apiAuth = ApiAuth.fromJson(apiResponse.data);
+
+      if (apiAuth.isEmpty == true) {
+        throw Exception('Empty Response');
+      }
+
+      if (apiAuth.logoutCheck(apiResponse.response) == true) {
+        await logout();
+      }
+
+      setDeviceToken(apiAuth.deviceToken ?? '');
+
+      if (deviceTokenStorage.emptyDeviceTokenCheck() == true) {
+        await logout();
+      }
+    } catch (e) {
+      await logout();
+    } finally {
+      isLoading = false;
     }
   }
 }

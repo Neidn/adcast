@@ -1,12 +1,19 @@
 import 'package:get/get.dart';
 
-import '/app/data/model/campaign/campaign_data.dart';
+import '/app/utils/global_variables.dart';
 
-import '/app/storage/campaign/campaign_list_data_storage.dart';
+import '/app/storage/db/campaigns_table.dart';
+import '/app/data/model/campaign/campaign_data.dart';
 
 class CampaignController extends GetxController {
   // Campaign List Data
-  RxList<CampaignData> campaignListData = <CampaignData>[].obs;
+  final RxList<CampaignData> _campaignListData = <CampaignData>[].obs;
+
+  List<CampaignData> get campaignListData => _campaignListData;
+
+  set campaignListData(value) => _campaignListData.value = value;
+
+  CampaignsTable campaignsTable = CampaignsTable(appCampaignsTable);
 
   @override
   void onInit() async {
@@ -17,7 +24,7 @@ class CampaignController extends GetxController {
 
   Future<void> getCampaignListData() async {
     try {
-      campaignListData.value = campaignListDataStorage.campaignListData;
+      campaignListData = await campaignsTable.getCampaignListData();
     } catch (e) {
       rethrow;
     }

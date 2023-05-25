@@ -15,9 +15,9 @@ class ApiAdKeywordResponse {
   @JsonKey(name: 'customer_id')
   final String? customerId;
   @JsonKey(name: 'campaign_id')
-  final String? campaignId;
+  final String? campaignKey;
   @JsonKey(name: 'group_id')
-  final String? groupId;
+  final String? groupKey;
   final Map<String, dynamic>? data;
 
   ApiAdKeywordResponse({
@@ -27,8 +27,8 @@ class ApiAdKeywordResponse {
     this.totalData,
     this.userId,
     this.customerId,
-    this.campaignId,
-    this.groupId,
+    this.campaignKey,
+    this.groupKey,
     this.data,
   });
 
@@ -50,6 +50,13 @@ class ApiAdKeywordResponse {
         totalData == null ||
         data == {} ||
         data == null) {
+      return true;
+    }
+    return false;
+  }
+
+  bool apiResponseLogoutCheck() {
+    if (responseCode == "400" && request == "Logout") {
       return true;
     }
     return false;

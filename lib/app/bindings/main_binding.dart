@@ -10,6 +10,8 @@ import '/app/controller/keyword/keyword_controller.dart';
 
 import '/app/controller/device/device_token_controller.dart';
 
+import '/app/controller/profile/profile_controller.dart';
+
 class MainBinding implements Bindings {
   @override
   void dependencies() {
@@ -21,5 +23,6 @@ class MainBinding implements Bindings {
     Get.put(CampaignController());
     Get.put(KeywordController());
     Get.put(DeviceTokenController());
+    Get.put(ProfileController());
   }
 }

@@ -1,0 +1,7 @@
+CREATE TABLE IF NOT EXISTS user_info(
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  userId TEXT NOT NULL,
+  userName TEXT NOT NULL,
+  userStatus TEXT,
+  customerId TEXT,
+)

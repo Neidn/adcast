@@ -4,6 +4,7 @@ part 'keyword_data.g.dart';
 
 @JsonSerializable()
 class KeywordData {
+  final int? id;
   @JsonKey(name: 'keyword_key')
   final String? keywordKey;
   final String? keyword;
@@ -29,8 +30,8 @@ class KeywordData {
   @JsonKey(name: 'diagnose_txt')
   final String? diagnoseTxt;
 
-
   KeywordData({
+    this.id,
     this.keywordKey,
     this.keyword,
     this.status,

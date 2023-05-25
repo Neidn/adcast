@@ -1,21 +1,21 @@
 import 'package:json_annotation/json_annotation.dart';
 
-part 'keyword_list_data.g.dart';
+part 'keyword_list_info_data.g.dart';
 
 @JsonSerializable()
-class KeywordListData {
+class KeywordListInfoData {
   final String? totalResults;
   final Map<String, dynamic>? data;
 
-  KeywordListData({
+  KeywordListInfoData({
     this.totalResults,
     this.data,
   });
 
-  factory KeywordListData.fromJson(Map<String, dynamic> json) =>
-      _$KeywordListDataFromJson(json);
+  factory KeywordListInfoData.fromJson(Map<String, dynamic> json) =>
+      _$KeywordListInfoDataFromJson(json);
 
-  Map<String, dynamic> toJson() => _$KeywordListDataToJson(this);
+  Map<String, dynamic> toJson() => _$KeywordListInfoDataToJson(this);
 
   bool emptyKeywordListDataCheck() {
     if (totalResults == null ||

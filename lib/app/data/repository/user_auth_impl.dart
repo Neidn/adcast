@@ -3,6 +3,8 @@ import '/app/utils/global_variables.dart';
 import '/app/data/model/user/user_auth.dart';
 import '/app/data/model/api/api_response.dart';
 
+import '/app/services/auth_service.dart';
+
 class UserAuthImpl {
   final _client = RestClient(dio);
 
@@ -16,7 +18,12 @@ class UserAuthImpl {
           await _client.postLogin(userId, userPwd, deviceToken);
 
       if (apiResponse.apiResponseCodeCheck() == false) {
-        throw Exception(apiResponse.response);
+        if (apiResponse.apiResponseLogoutCheck() == true) {
+          await AuthService.to.logout();
+          throw Exception("Session Expired");
+        } else {
+          throw Exception(apiResponse.response);
+        }
       }
 
       if (apiResponse.apiResponseEmptyCheck() == true) {

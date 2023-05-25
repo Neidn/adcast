@@ -8,20 +8,19 @@ import '/app/routes/app_pages.dart';
 import '/app/data/model/api/api_result.dart';
 import '/app/data/model/api/api_response.dart';
 
-import '/app/data/model/user/user_data.dart';
 import '/app/data/model/user/user_response_data.dart';
-import '/app/data/model/user/customer_data.dart';
-
-import '/app/data/model/campaign/campaign_data.dart';
-import '/app/data/model/campaign/group_data.dart';
 
 import '/app/storage/device/device_token_storage.dart';
 import '/app/storage/device/device_id_storage.dart';
-import '/app/storage/user/user_data_storage.dart';
-import '/app/storage/user/customer_data_storage.dart';
+import '/app/data/model/campaign/campaign_data.dart';
+import '/app/data/model/campaign/group_data.dart';
+import '/app/storage/db/campaigns_table.dart';
+import '/app/storage/db/groups_table.dart';
+import '/app/data/model/user/user_info_data.dart';
 
-import '/app/storage/campaign/campaign_list_data_storage.dart';
-import '/app/storage/campaign/group_list_data_storage.dart';
+import '/app/storage/db/user_info_table.dart';
+
+import '/app/utils/global_variables.dart';
 
 import '/app/data/repository/user_auth_impl.dart';
 
@@ -74,7 +73,6 @@ class LoginController extends GetxController {
   // Login
   void login() async {
     UserAuthImpl userAuthImpl = UserAuthImpl();
-    AuthService authService = AuthService();
 
     isLoading = true;
 
@@ -96,33 +94,26 @@ class LoginController extends GetxController {
         throw Exception('Response Data is Empty');
       }
 
-      // Save User Data To Storage
-      userDataStorage.userData = UserData(
-        userid: userResponseData.userid,
-        username: userResponseData.username,
-      );
-
-      if (userDataStorage.emptyUserDataCheck() == true) {
-        throw Exception('Try Again');
-      }
-
       // Save Access Token To Storage
-      deviceTokenStorage.deviceToken = userResponseData.accessToken ?? '';
+      AuthService.to.setDeviceToken(userResponseData.accessToken ?? '');
 
       if (deviceTokenStorage.emptyDeviceTokenCheck() == true) {
         throw Exception('Try Again');
       }
 
-      // Save Customer Data To Storage
-      customerDataStorage.customerData =
-          CustomerData.fromJson(userResponseData.customer!);
+      // Save User info To Database
+      UserInfoTable userInfoTable = UserInfoTable(appUserInfoTable);
+      int result = await userInfoTable.userInfoInsert(
+        UserInfoData(
+          userId: id,
+          userName: userResponseData.username,
+          userStatus: userResponseData.customer!['status'],
+          customerKey: userResponseData.customer!['id'],
+        ),
+      );
 
-      if (customerDataStorage.emptyCustomerDataCheck() == true) {
+      if (result == 0) {
         throw Exception('Try Again');
-      }
-
-      if (customerDataStorage.customerData.customerDataStatusCheck() == false) {
-        throw Exception('Status is not OK');
       }
 
       // parse campaign data
@@ -140,20 +131,22 @@ class LoginController extends GetxController {
         throw Exception('Data Fetching Error');
       }
 
-      // Save Campaign Data To Storage
+      // Save Campaign Data To Database
       List<CampaignData> campaignListData = [];
 
-      // Save Group Data To Storage
-      List<GroupData> groupListData = [];
+      // Save Group Data To Database
+      List<GroupData> groupNewListData = [];
 
-      for (var data in campaignResult.data!.entries) {
-        String campaignKey = data.key;
-        Map<String, dynamic> groupData = data.value['group'];
+      for (var campaignData in campaignResult.data!.entries) {
+        String campaignKey = campaignData.key;
 
-        data.value['campaign_key'] = campaignKey;
-        data.value.remove('group');
+        Map<String, dynamic> groupData = campaignData.value['group'];
 
-        // campaignListData
+        campaignData.value['campaign_key'] = campaignKey;
+        campaignData.value['campaign_name'] = campaignData.value['name'];
+
+        campaignData.value.remove('group');
+        campaignData.value.remove('name');
 
         ApiResult groupResult = ApiResult.fromJson(groupData);
 
@@ -169,35 +162,38 @@ class LoginController extends GetxController {
           throw Exception('Data Fetching Error');
         }
 
-        campaignListData.add(CampaignData.fromJson(data.value));
+        campaignListData.add(CampaignData.fromJson(campaignData.value));
 
-        for (var data in groupResult.data!.entries) {
-          String groupKey = data.key;
-          data.value['group_key'] = groupKey;
-          data.value['campaign_key'] = campaignKey;
-          data.value.remove('campaign');
-          groupListData.add(GroupData.fromJson(data.value));
+        for (var groupData in groupResult.data!.entries) {
+          String groupKey = groupData.key;
+          groupData.value['group_key'] = groupKey;
+          groupData.value['campaign_key'] = campaignKey;
+          groupData.value['group_name'] = groupData.value['name'];
+
+          groupData.value.remove('campaign');
+
+          groupNewListData.add(GroupData.fromJson(groupData.value));
         }
       }
 
-      campaignListDataStorage.campaignListData = campaignListData;
+      // Save Campaign Data To Database
+      CampaignsTable campaignsTable = CampaignsTable(appCampaignsTable);
 
-      if (campaignListDataStorage.emptyCampaignListDataCheck() == true) {
-        throw Exception('Try Again');
-      }
+      campaignsTable.campaignsDataInsert(campaignListData);
 
-      groupListDataStorage.groupListData = groupListData;
+      // Save Group Data To Database
+      GroupsTable groupsTable = GroupsTable(appGroupsTable);
 
-      if (groupListDataStorage.emptyGroupListDataCheck() == true) {
-        throw Exception('Try Again');
-      }
+      groupsTable.groupsDataInsert(groupNewListData);
 
-      authService.loginCheck();
+      await AuthService.to.loginCheck();
 
       // Show Success SnackBar And Navigate To Main Page
+      UserInfoData userInfoData = await userInfoTable.userInfoSelectOne();
+
       Get.snackbar(
         response.response,
-        "Welcome ${userDataStorage.userData.username}",
+        "Welcome ${userInfoData.userName}",
         snackPosition: SnackPosition.TOP,
         duration: const Duration(seconds: 1),
       );

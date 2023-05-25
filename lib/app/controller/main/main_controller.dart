@@ -1,3 +1,5 @@
+import 'package:adcast/app/controller/keyword/keyword_controller.dart';
+import 'package:adcast/app/services/auth_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -26,7 +28,7 @@ class MainController extends GetxController {
     super.dispose();
   }
 
-  void changePage(int index) {
+  void changePage(int index) async {
     currentIndex = index;
     pageController.jumpToPage(index);
   }

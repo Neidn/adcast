@@ -26,14 +26,6 @@ part './app_routes.dart';
 class AppPages {
   static final pages = [
     GetPage(
-      name: Routes.main,
-      page: () => const MainPage(),
-      binding: MainBinding(),
-      middlewares: [
-        AuthMiddleWare(),
-      ],
-    ),
-    GetPage(
       name: Routes.login,
       page: () => const LoginPage(),
       binding: LoginBinding(),
@@ -42,36 +34,9 @@ class AppPages {
       ],
     ),
     GetPage(
-      name: Routes.campaign,
-      page: () => const CampaignPage(),
-      middlewares: [
-        AuthMiddleWare(),
-      ],
-    ),
-    GetPage(
-      name: Routes.adGroup,
-      page: () => const GroupPage(),
-      middlewares: [
-        AuthMiddleWare(),
-      ],
-    ),
-    GetPage(
-      name: Routes.profile,
-      page: () => const ProfilePage(),
-      middlewares: [
-        AuthMiddleWare(),
-      ],
-    ),
-    GetPage(
-      name: Routes.keyword,
-      page: () => const KeywordPage(),
-      middlewares: [
-        AuthMiddleWare(),
-      ],
-    ),
-    GetPage(
-      name: Routes.second,
-      page: () => const SecondPage(),
+      name: Routes.main,
+      page: () => const MainPage(),
+      binding: MainBinding(),
       middlewares: [
         AuthMiddleWare(),
       ],
@@ -82,35 +47,35 @@ class AppPages {
     {
       "route": Routes.campaign,
       "page": const CampaignPage(),
-      "title": "Campaign",
+      "title": "캠페인",
       "active_icon": Icons.home,
       "inactive_icon": Icons.home_outlined,
     },
     {
       "route": Routes.adGroup,
       "page": const GroupPage(),
-      "title": "AdGroup",
+      "title": "광고 그룹",
       "active_icon": Icons.favorite,
       "inactive_icon": Icons.favorite_border,
     },
     {
       "route": Routes.keyword,
       "page": const KeywordPage(),
-      "title": "AdKeyword",
+      "title": "키워드",
       "active_icon": Icons.person,
       "inactive_icon": Icons.person_outline,
     },
     {
       "route": Routes.second,
       "page": const SecondPage(),
-      "title": "Fourth",
+      "title": "더미",
       "active_icon": Icons.check_box,
       "inactive_icon": Icons.check_box_outlined,
     },
     {
       "route": Routes.profile,
       "page": const ProfilePage(),
-      "title": "Profile",
+      "title": "프로필",
       "active_icon": Icons.settings,
       "inactive_icon": Icons.settings_outlined,
     },

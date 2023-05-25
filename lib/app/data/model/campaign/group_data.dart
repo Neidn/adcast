@@ -4,11 +4,13 @@ part 'group_data.g.dart';
 
 @JsonSerializable()
 class GroupData {
+  final int? id;
   @JsonKey(name: 'campaign_key')
   final String? campaignKey;
   @JsonKey(name: 'group_key')
   final String? groupKey;
-  final String? name;
+  @JsonKey(name: 'group_name')
+  final String? groupName;
   final String? message;
   @JsonKey(name: 'user_lock')
   final String? userLock;
@@ -17,9 +19,10 @@ class GroupData {
   final String? statusReason;
 
   GroupData({
+    this.id,
     this.campaignKey,
     this.groupKey,
-    this.name,
+    this.groupName,
     this.message,
     this.userLock,
     this.status,
@@ -30,30 +33,4 @@ class GroupData {
       _$GroupDataFromJson(json);
 
   Map<String, dynamic> toJson() => _$GroupDataToJson(this);
-
-  bool groupStatusCheck() => status == "OK";
-
-  bool groupUserLockCheck() => userLock == "ON";
-
-  bool emptyCampaignKeyCheck() => campaignKey == "" || campaignKey == null;
-
-  bool emptyGroupKeyCheck() => groupKey == "" || groupKey == null;
-
-  bool groupDataEmptyCheck() {
-    if (campaignKey == "" ||
-        campaignKey == null ||
-        groupKey == "" ||
-        groupKey == null ||
-        name == "" ||
-        name == null ||
-        userLock == "" ||
-        userLock == null ||
-        status == "" ||
-        status == null ||
-        statusReason == "" ||
-        statusReason == null) {
-      return true;
-    }
-    return false;
-  }
 }

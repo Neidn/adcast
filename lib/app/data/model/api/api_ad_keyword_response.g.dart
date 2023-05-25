@@ -15,8 +15,8 @@ ApiAdKeywordResponse _$ApiAdKeywordResponseFromJson(
       totalData: json['total_data'] as String?,
       userId: json['user_id'] as String?,
       customerId: json['customer_id'] as String?,
-      campaignId: json['campaign_id'] as String?,
-      groupId: json['group_id'] as String?,
+      campaignKey: json['campaign_id'] as String?,
+      groupKey: json['group_id'] as String?,
       data: json['data'] as Map<String, dynamic>?,
     );
 
@@ -29,7 +29,7 @@ Map<String, dynamic> _$ApiAdKeywordResponseToJson(
       'total_data': instance.totalData,
       'user_id': instance.userId,
       'customer_id': instance.customerId,
-      'campaign_id': instance.campaignId,
-      'group_id': instance.groupId,
+      'campaign_id': instance.campaignKey,
+      'group_id': instance.groupKey,
       'data': instance.data,
     };

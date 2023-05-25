@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '/app/controller/device/device_token_controller.dart';
-
+import '/app/controller/profile/profile_controller.dart';
+import '/app/data/model/user/user_info_data.dart';
+import '/app/storage/db/user_info_table.dart';
+import '/app/utils/global_variables.dart';
 import '/app/services/auth_service.dart';
-import '/app/storage/user/user_data_storage.dart';
 
-class ProfilePage extends GetView<DeviceTokenController> {
+class ProfilePage extends GetView<ProfileController> {
   const ProfilePage({super.key});
 
   Future<void> logOut() async {
@@ -52,7 +53,7 @@ class ProfilePage extends GetView<DeviceTokenController> {
     );
 
     if (response == true) {
-      await AuthService().logout();
+      await AuthService.to.logout();
     }
   }
 
@@ -85,54 +86,46 @@ class ProfilePage extends GetView<DeviceTokenController> {
     );
   }
 
-  void sessionCheckTest() {
-    controller.sessionDeviceToken();
-  }
-
   @override
   Widget build(BuildContext context) {
-    String userName = userDataStorage.userData.username ?? '';
-
-    return Scaffold(
-      body: ListView(
-        padding: const EdgeInsets.symmetric(
-          horizontal: 16,
-          vertical: 16,
+    return ListView(
+      padding: const EdgeInsets.symmetric(
+        horizontal: 16,
+        vertical: 16,
+      ),
+      children: [
+        const SizedBox(height: 20),
+        _userInfoItemProfile(Icons.person, controller.userName),
+        const SizedBox(height: 20),
+        ElevatedButton(
+          onPressed: () => {},
+          child: const Text('Test'),
         ),
-        children: [
-          const SizedBox(height: 20),
-          _userInfoItemProfile(Icons.person, userName),
-          const SizedBox(height: 20),
-          ElevatedButton(
-            onPressed: () => sessionCheckTest(),
-            child: const Text('Test'),
-          ),
-          const SizedBox(height: 20),
-          Center(
-            child: Material(
-              color: Colors.redAccent,
-              borderRadius: BorderRadius.circular(8),
-              child: InkWell(
-                onTap: () async => await logOut(),
-                borderRadius: BorderRadius.circular(32),
-                child: const Padding(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: 30,
-                    vertical: 12,
-                  ),
-                  child: Text(
-                    'Logout',
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: Colors.white,
-                    ),
+        const SizedBox(height: 20),
+        Center(
+          child: Material(
+            color: Colors.redAccent,
+            borderRadius: BorderRadius.circular(8),
+            child: InkWell(
+              onTap: () async => await logOut(),
+              borderRadius: BorderRadius.circular(32),
+              child: const Padding(
+                padding: EdgeInsets.symmetric(
+                  horizontal: 30,
+                  vertical: 12,
+                ),
+                child: Text(
+                  'Logout',
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Colors.white,
                   ),
                 ),
               ),
             ),
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }

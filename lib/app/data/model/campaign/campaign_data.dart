@@ -4,9 +4,11 @@ part 'campaign_data.g.dart';
 
 @JsonSerializable()
 class CampaignData {
+  final int? id;
   @JsonKey(name: 'campaign_key')
   final String? campaignKey;
-  final String? name;
+  @JsonKey(name: 'campaign_name')
+  final String? campaignName;
   final String? message;
   @JsonKey(name: 'user_lock')
   final String? userLock;
@@ -15,8 +17,9 @@ class CampaignData {
   final String? statusReason;
 
   CampaignData({
+    this.id,
     this.campaignKey,
-    this.name,
+    this.campaignName,
     this.message,
     this.userLock,
     this.status,
@@ -27,24 +30,4 @@ class CampaignData {
       _$CampaignDataFromJson(json);
 
   Map<String, dynamic> toJson() => _$CampaignDataToJson(this);
-
-  bool campaignStatusCheck() => status == "OK";
-
-  bool campaignUserLockCheck() => userLock == "ON";
-
-  bool campaignDataEmptyCheck() {
-    if (campaignKey == "" ||
-        campaignKey == null ||
-        name == "" ||
-        name == null ||
-        userLock == "" ||
-        userLock == null ||
-        status == "" ||
-        status == null ||
-        statusReason == "" ||
-        statusReason == null) {
-      return true;
-    }
-    return false;
-  }
 }

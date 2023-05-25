@@ -37,4 +37,11 @@ class ApiResponse {
     }
     return false;
   }
+
+  bool apiResponseLogoutCheck() {
+    if (responseCode == "400" && request == "Logout") {
+      return true;
+    }
+    return false;
+  }
 }

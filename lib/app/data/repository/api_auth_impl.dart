@@ -4,6 +4,8 @@ import '/app/data/model/api/api_auth.dart';
 
 import '/app/data/model/api/api_response.dart';
 
+import '/app/services/auth_service.dart';
+
 class ApiAuthImpl {
   final _client = RestClient(dio);
 
@@ -12,7 +14,12 @@ class ApiAuthImpl {
       ApiResponse apiResponse = await _client.getSessionCheck(deviceToken);
 
       if (apiResponse.apiResponseCodeCheck() == false) {
-        throw Exception(apiResponse.response);
+        if (apiResponse.apiResponseLogoutCheck() == true) {
+          await AuthService.to.logout();
+          throw Exception("Session Expired");
+        } else {
+          throw Exception(apiResponse.response);
+        }
       }
 
       if (apiResponse.apiResponseEmptyCheck() == true) {

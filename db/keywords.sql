@@ -1,0 +1,16 @@
+CREATE TABLE IF NOT EXISTS keywords(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    keywordKey TEXT NOT NULL,
+    keyword TEXT NOT NULL,
+    status TEXT NOT NULL,
+    statusReason TEXT,
+    userLock TEXT NOT NULL,
+    btype TEXT,
+    rcode TEXT,
+    beforeRank INTEGER,
+    wishRank  INTEGER,
+    bidAmt INTEGER,
+    maxAmt INTEGER,
+    bidState TEXT,
+    diagnoseTxt TEXT,
+)
