@@ -22,8 +22,6 @@ class AuthMiddleWare extends GetMiddleware {
           route == Routes.initial) {
         return null;
       } else {
-        Future.delayed(const Duration(seconds: 1),
-            () => Get.snackbar("Warning", "You must login"));
         return const RouteSettings(name: Routes.login);
       }
     });

@@ -135,7 +135,7 @@ class LoginController extends GetxController {
       List<CampaignData> campaignListData = [];
 
       // Save Group Data To Database
-      List<GroupData> groupNewListData = [];
+      List<GroupData> groupListData = [];
 
       for (var campaignData in campaignResult.data!.entries) {
         String campaignKey = campaignData.key;
@@ -172,7 +172,7 @@ class LoginController extends GetxController {
 
           groupData.value.remove('campaign');
 
-          groupNewListData.add(GroupData.fromJson(groupData.value));
+          groupListData.add(GroupData.fromJson(groupData.value));
         }
       }
 
@@ -184,7 +184,7 @@ class LoginController extends GetxController {
       // Save Group Data To Database
       GroupsTable groupsTable = GroupsTable(appGroupsTable);
 
-      groupsTable.groupsDataInsert(groupNewListData);
+      groupsTable.groupsDataInsert(groupListData);
 
       await AuthService.to.loginCheck();
 

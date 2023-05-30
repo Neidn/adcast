@@ -5,8 +5,6 @@ import '/app/controller/main/main_controller.dart';
 
 import '/app/routes/app_pages.dart';
 
-import '/app/ui/theme/app_theme.dart';
-
 class NavigationBar extends GetView<MainController> {
   const NavigationBar({super.key});
 

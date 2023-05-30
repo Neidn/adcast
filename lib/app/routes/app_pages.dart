@@ -5,7 +5,7 @@ import '/app/middle_ware/auth_middle_ware.dart';
 
 // Pages Start
 import '/app/bindings/main_binding.dart';
-import '../ui/default/main/page/main_page.dart';
+import '/app/ui/default/main/page/main_page.dart';
 
 import '/app/bindings/login_binding.dart';
 import '/app/ui/default/auth/page/login_page.dart';
@@ -14,11 +14,10 @@ import '/app/ui/default/profile/profile_page.dart';
 
 import '/app/ui/default/campaign/page/campaign_page.dart';
 
-import '/app/ui/default/group/group_page.dart';
-
 import '/app/ui/default/keyword/page/keyword_page.dart';
 // Pages End
 
+import '/app/ui/default/dummy/first_page.dart';
 import '/app/ui/default/dummy/second_page.dart';
 
 part './app_routes.dart';
@@ -52,13 +51,6 @@ class AppPages {
       "inactive_icon": Icons.home_outlined,
     },
     {
-      "route": Routes.adGroup,
-      "page": const GroupPage(),
-      "title": "광고 그룹",
-      "active_icon": Icons.favorite,
-      "inactive_icon": Icons.favorite_border,
-    },
-    {
       "route": Routes.keyword,
       "page": const KeywordPage(),
       "title": "키워드",
@@ -66,9 +58,16 @@ class AppPages {
       "inactive_icon": Icons.person_outline,
     },
     {
+      "route": Routes.first,
+      "page": const FirstPage(),
+      "title": "더미",
+      "active_icon": Icons.check_box,
+      "inactive_icon": Icons.check_box_outlined,
+    },
+    {
       "route": Routes.second,
       "page": const SecondPage(),
-      "title": "더미",
+      "title": "더미2",
       "active_icon": Icons.check_box,
       "inactive_icon": Icons.check_box_outlined,
     },

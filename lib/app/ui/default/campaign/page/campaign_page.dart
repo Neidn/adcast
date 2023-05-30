@@ -4,15 +4,15 @@ import 'package:get/get.dart';
 import '/app/routes/app_pages.dart';
 
 import '/app/data/model/campaign/campaign_data.dart';
+import '/app/data/model/campaign/group_data.dart';
 
 import '/app/controller/main/main_controller.dart';
-import '/app/controller/keyword/keyword_controller.dart';
 import '/app/controller/campaign/campaign_controller.dart';
-import '/app/controller/group/group_controller.dart';
 
 class CampaignPage extends GetView<CampaignController> {
   const CampaignPage({Key? key}) : super(key: key);
 
+  /*
   void loadGroupData(String campaignKey) async {
     KeywordController.to.resetKeywordListData();
     GroupController.to.resetGroupListData();
@@ -25,59 +25,86 @@ class CampaignPage extends GetView<CampaignController> {
 
     MainController.to.changePage(index);
   }
+   */
+
+  void loadKeywordData(
+    String campaignKey,
+    String groupKey,
+  ) async {
+    await controller.getKeyword(
+      campaignKey,
+      groupKey,
+    );
+
+    final int index = AppPages.navigationScreensProperties.indexWhere(
+      (element) => element["route"] == Routes.keyword,
+    );
+
+    MainController.to.changePage(index);
+  }
 
   @override
   Widget build(BuildContext context) {
     return GetX<CampaignController>(
       builder: (_) {
         // print all of the campaign data
-        return ListView.builder(
-          padding: const EdgeInsets.symmetric(
-            horizontal: 16,
-            vertical: 16,
-          ),
-          scrollDirection: Axis.vertical,
-          itemCount: _.campaignListData.length,
-          itemBuilder: (context, index) {
-            final CampaignData campaignData = _.campaignListData[index];
-            final String campaignName = campaignData.campaignName as String;
-            final String campaignKey = campaignData.campaignKey as String;
+        return Stack(
+          children: [
+            _.isLoading
+                ? const LinearProgressIndicator()
+                : const Padding(padding: EdgeInsets.only(top: 0)),
+            const Divider(),
+            ListView.builder(
+              padding: const EdgeInsets.only(left: 8),
+              scrollDirection: Axis.vertical,
+              itemCount: _.campaignGroupMap.length,
+              itemBuilder: (context, index) {
+                final CampaignData campaignData =
+                    _.campaignGroupMap.keys.elementAt(index);
+                final List<GroupData> groupData =
+                    _.campaignGroupMap.values.elementAt(index);
 
-            return InkWell(
-              onTap: () => loadGroupData(campaignKey),
-              autofocus: true,
-              splashColor: Colors.grey,
-              child: Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(12),
-                  color: Colors.grey,
-                ),
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 16,
-                  vertical: 8,
-                ),
-                margin: const EdgeInsets.symmetric(
-                  vertical: 8,
-                ),
-                child: Row(
-                  children: [
-                    const Icon(
-                      Icons.campaign,
-                      size: 30,
-                      color: Colors.black,
+                final String campaignName = campaignData.campaignName as String;
+                final String campaignKey = campaignData.campaignKey as String;
+
+                return ExpansionTile(
+                  title: Text(campaignName),
+                  subtitle: Text(
+                    "광고 그룹 : ${groupData.length} 개",
+                    style: const TextStyle(
+                      color: Colors.grey,
+                      fontSize: 12,
                     ),
-                    const SizedBox(width: 16),
-                    Text(
-                      campaignName,
-                      style: const TextStyle(
-                        fontSize: 15,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            );
-          },
+                  ),
+                  children: List.generate(
+                    groupData.length,
+                    (index) {
+                      final String groupKey =
+                          groupData[index].groupKey as String;
+                      final String groupName =
+                          groupData[index].groupName as String;
+
+                      return InkWell(
+                        onTap: () => loadKeywordData(
+                          campaignKey,
+                          groupKey,
+                        ),
+                        child: Container(
+                          width: double.infinity,
+                          alignment: Alignment.centerLeft,
+                          padding: const EdgeInsets.symmetric(
+                            vertical: 8,
+                            horizontal: 32,
+                          ),
+                          child: Text(groupName),
+                        ),
+                      );
+                    },
+                  ),
+                );
+              },
+            ),
+          ],
         );
       },
     );

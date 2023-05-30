@@ -26,13 +26,9 @@ class ApiResponse {
 
   bool apiResponseEmptyCheck() {
     if (responseCode == "" ||
-        responseCode == null ||
         response == "" ||
-        response == null ||
         request == "" ||
-        request == null ||
-        data == {} ||
-        data == null) {
+        data == {}) {
       return true;
     }
     return false;

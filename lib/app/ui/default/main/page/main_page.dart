@@ -1,6 +1,8 @@
-import 'package:adcast/app/controller/keyword/keyword_controller.dart';
+import 'package:adcast/app/ui/theme/app_colors.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
+
+import '/app/ui/theme/app_theme.dart';
 
 import '/app/routes/app_pages.dart';
 
@@ -11,17 +13,14 @@ class MainPage extends GetView<MainController> {
 
   @override
   Widget build(BuildContext context) {
-    final int keywordIndex = AppPages.navigationScreensProperties.indexWhere(
-      (element) => element["route"] == Routes.keyword,
-    );
-
     return GetX<MainController>(
       builder: (_) => Scaffold(
         appBar: AppBar(
           title: Text(
             AppPages.navigationScreensProperties[_.currentIndex]['title'],
           ),
-          centerTitle: true,
+          centerTitle: false,
+          backgroundColor: mobileBackGroundColor,
         ),
         body: SafeArea(
           child: PageView(
@@ -33,12 +32,12 @@ class MainPage extends GetView<MainController> {
         ),
         bottomNavigationBar: BottomNavigationBar(
           currentIndex: _.currentIndex,
-          showSelectedLabels: false,
-          showUnselectedLabels: false,
-          backgroundColor: Get.theme.colorScheme.primary,
-          selectedItemColor: Colors.white,
-          unselectedItemColor: Colors.white24,
-          type: BottomNavigationBarType.fixed,
+          showSelectedLabels: navigationDefaultSet['showSelectedLabels'],
+          showUnselectedLabels: navigationDefaultSet['showUnselectedLabels'],
+          selectedItemColor: navigationDefaultSet['selectedItemColor'],
+          unselectedItemColor: navigationDefaultSet['unselectedItemColor'],
+          backgroundColor: navigationDefaultSet['backgroundColor'],
+          type: navigationDefaultSet['type'],
           onTap: _.changePage,
           items: List.generate(
             AppPages.navigationScreensProperties.length,

@@ -50,7 +50,7 @@ class GroupsTable extends TableHelper {
     });
   }
 
-  Future<List<GroupData>> getGroupNewListData(String campaignKey) async {
+  Future<List<GroupData>> getGroupListData(String campaignKey) async {
     List<Map<String, dynamic>> result = await database.query(
       tableName,
       where: 'campaign_key = ?',

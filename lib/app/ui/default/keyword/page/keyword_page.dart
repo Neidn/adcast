@@ -56,8 +56,6 @@ class KeywordPage extends GetView<KeywordController> {
                       keywordData.statusReason as String;
                   final String keywordBidState = keywordData.bidState as String;
                   final String keywordWishRank = keywordData.wishRank as String;
-                  final String keywordCurrentRank =
-                      keywordData.currentRank as String;
                   final String keywordBidAmt = keywordData.bidAmt as String;
                   final String keywordDiagnoseTxt =
                       keywordData.diagnoseTxt as String;

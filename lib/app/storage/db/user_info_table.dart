@@ -2,8 +2,6 @@ import '/app/utils/table_helper.dart';
 
 import '/app/data/model/user/user_info_data.dart';
 
-import '/app/services/auth_service.dart';
-
 class UserInfoTable extends TableHelper {
   UserInfoTable(super.tableName);
 

@@ -2,9 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '/app/controller/profile/profile_controller.dart';
-import '/app/data/model/user/user_info_data.dart';
-import '/app/storage/db/user_info_table.dart';
-import '/app/utils/global_variables.dart';
+
 import '/app/services/auth_service.dart';
 
 class ProfilePage extends GetView<ProfileController> {
