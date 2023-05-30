@@ -150,13 +150,6 @@ class CampaignController extends GetxController {
 
       // keyword controller data set
       KeywordController.to.getKeywordListData();
-
-      // Success
-      Get.snackbar(
-        'Data Fetching is success',
-        'Data is successfully fetched from the server.',
-        snackPosition: SnackPosition.TOP,
-      );
     } catch (e) {
       await keywordInfoTable.deleteAll();
       await keywordsTable.deleteAll();

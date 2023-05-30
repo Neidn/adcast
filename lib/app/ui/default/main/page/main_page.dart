@@ -15,13 +15,6 @@ class MainPage extends GetView<MainController> {
   Widget build(BuildContext context) {
     return GetX<MainController>(
       builder: (_) => Scaffold(
-        appBar: AppBar(
-          title: Text(
-            AppPages.navigationScreensProperties[_.currentIndex]['title'],
-          ),
-          centerTitle: false,
-          backgroundColor: mobileBackGroundColor,
-        ),
         body: SafeArea(
           child: PageView(
             controller: _.pageController,

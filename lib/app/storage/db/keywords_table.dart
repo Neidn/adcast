@@ -55,6 +55,16 @@ class KeywordsTable extends TableHelper {
     return result.map((e) => KeywordData.fromJson(e)).toList();
   }
 
+  Future<List<KeywordData>> keywordsSelectFilterUserLock() async {
+    List<Map<String, dynamic>> result = await database.query(
+      tableName,
+      where: 'user_lock = ?',
+      whereArgs: ['OFF'],
+    );
+
+    return result.map((e) => KeywordData.fromJson(e)).toList();
+  }
+
   Future<bool> keywordExists(String keywordKey) async {
     List<Map<String, dynamic>> result = await database.query(
       tableName,

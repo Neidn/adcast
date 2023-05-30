@@ -69,6 +69,13 @@ class KeywordController extends GetxController {
 
   set isNextLoading(bool value) => _isNextLoading.value = value;
 
+  // Bid Exception Filter - default: true
+  final RxBool _isBidExceptionFilter = true.obs;
+
+  bool get isBidExceptionFilter => _isBidExceptionFilter.value;
+
+  set isBidExceptionFilter(bool value) => _isBidExceptionFilter.value = value;
+
   // prevent multiple requests
   final RxDouble _maxScrollExtent = 0.0.obs;
   final RxDouble _currentScrollPosition = 0.0.obs;
@@ -118,6 +125,11 @@ class KeywordController extends GetxController {
 
   void resetKeywordListData() => keywordListData = [];
 
+  void changeBidExceptionFilter() async {
+    isBidExceptionFilter = !isBidExceptionFilter;
+    await getKeywordListData();
+  }
+
   Future<void> getKeywordInfoData() async {
     keywordInfoData = await keywordInfoTable.keywordInfoSelectOne();
   }
@@ -131,7 +143,11 @@ class KeywordController extends GetxController {
 
     try {
       resetKeywordListData();
-      keywordListData = await keywordsTable.keywordsSelect();
+      if (isBidExceptionFilter) {
+        keywordListData = await keywordsTable.keywordsSelectFilterUserLock();
+      } else {
+        keywordListData = await keywordsTable.keywordsSelect();
+      }
     } catch (e) {
       rethrow;
     } finally {

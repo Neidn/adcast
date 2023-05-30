@@ -20,6 +20,13 @@ class MainController extends GetxController {
 
   set pageController(PageController value) => _pageController;
 
+  // Bid Exception Flag
+  final RxBool _isBidException = true.obs;
+
+  bool get isBidException => _isBidException.value;
+
+  set isBidException(bool value) => _isBidException.value = value;
+
   @override
   void dispose() {
     pageController.dispose();

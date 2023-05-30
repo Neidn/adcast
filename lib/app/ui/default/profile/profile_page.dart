@@ -1,5 +1,8 @@
+import 'package:adcast/app/ui/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+
+import '/app/ui/default/widgets/default_logo_widget.dart';
 
 import '/app/controller/profile/profile_controller.dart';
 
@@ -86,44 +89,57 @@ class ProfilePage extends GetView<ProfileController> {
 
   @override
   Widget build(BuildContext context) {
-    return ListView(
-      padding: const EdgeInsets.symmetric(
-        horizontal: 16,
-        vertical: 16,
+    return Scaffold(
+      appBar: AppBar(
+        title: const DefaultLogoWidget(),
+        centerTitle: false,
+        backgroundColor: mobileBackGroundColor,
       ),
-      children: [
-        const SizedBox(height: 20),
-        _userInfoItemProfile(Icons.person, controller.userName),
-        const SizedBox(height: 20),
-        ElevatedButton(
-          onPressed: () => {},
-          child: const Text('Test'),
-        ),
-        const SizedBox(height: 20),
-        Center(
-          child: Material(
-            color: Colors.redAccent,
-            borderRadius: BorderRadius.circular(8),
-            child: InkWell(
-              onTap: () async => await logOut(),
-              borderRadius: BorderRadius.circular(32),
-              child: const Padding(
-                padding: EdgeInsets.symmetric(
-                  horizontal: 30,
-                  vertical: 12,
-                ),
-                child: Text(
-                  'Logout',
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: Colors.white,
+      body: GetX<ProfileController>(
+        builder: (_) {
+          final String userName = _.userInfoData.userName ?? '';
+
+          return ListView(
+            padding: const EdgeInsets.symmetric(
+              horizontal: 16,
+              vertical: 16,
+            ),
+            children: [
+              const SizedBox(height: 20),
+              _userInfoItemProfile(Icons.person, userName),
+              const SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: () => {},
+                child: const Text('Test'),
+              ),
+              const SizedBox(height: 20),
+              Center(
+                child: Material(
+                  color: Colors.redAccent,
+                  borderRadius: BorderRadius.circular(8),
+                  child: InkWell(
+                    onTap: () async => await logOut(),
+                    borderRadius: BorderRadius.circular(32),
+                    child: const Padding(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 30,
+                        vertical: 12,
+                      ),
+                      child: Text(
+                        'Logout',
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
                   ),
                 ),
               ),
-            ),
-          ),
-        ),
-      ],
+            ],
+          );
+        },
+      ),
     );
   }
 }
