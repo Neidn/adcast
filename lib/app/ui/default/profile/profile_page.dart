@@ -93,47 +93,90 @@ class ProfilePage extends GetView<ProfileController> {
       appBar: AppBar(
         title: const DefaultLogoWidget(),
         centerTitle: false,
-        backgroundColor: mobileBackGroundColor,
+        backgroundColor: Get.theme.appBarTheme.backgroundColor,
       ),
       body: GetX<ProfileController>(
         builder: (_) {
           final String userName = _.userInfoData.userName ?? '';
 
-          return ListView(
-            padding: const EdgeInsets.symmetric(
-              horizontal: 16,
-              vertical: 16,
-            ),
+          return Column(
             children: [
-              const SizedBox(height: 20),
-              _userInfoItemProfile(Icons.person, userName),
-              const SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: () => {},
-                child: const Text('Test'),
-              ),
-              const SizedBox(height: 20),
-              Center(
-                child: Material(
-                  color: Colors.redAccent,
-                  borderRadius: BorderRadius.circular(8),
-                  child: InkWell(
-                    onTap: () async => await logOut(),
-                    borderRadius: BorderRadius.circular(32),
-                    child: const Padding(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: 30,
-                        vertical: 12,
-                      ),
-                      child: Text(
-                        'Logout',
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: Colors.white,
+              _.isLoading
+                  ? const LinearProgressIndicator()
+                  : const Padding(padding: EdgeInsets.only(top: 0)),
+              const Divider(),
+              Expanded(
+                child: ListView(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 8,
+                  ),
+                  children: [
+                    const SizedBox(height: 8),
+                    _userInfoItemProfile(Icons.person, userName),
+                    const SizedBox(height: 16),
+                    Row(
+                      mainAxisSize: MainAxisSize.max,
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      verticalDirection: VerticalDirection.down,
+                      children: [
+                        SizedBox(
+                          width: 100,
+                          child: Column(
+                            children: [
+                              Text(
+                                '${_.campaignCount}',
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 20,
+                                ),
+                              ),
+                              const Text('캠페인'),
+                            ],
+                          ),
+                        ),
+                        SizedBox(
+                          width: 100,
+                          child: Column(
+                            children: [
+                              Text(
+                                '${_.groupCount}',
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 20,
+                                ),
+                              ),
+                              const Text('그룹'),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 16),
+                    Center(
+                      child: Material(
+                        color: Colors.redAccent,
+                        borderRadius: BorderRadius.circular(8),
+                        child: InkWell(
+                          onTap: () async => await logOut(),
+                          borderRadius: BorderRadius.circular(32),
+                          child: const Padding(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 30,
+                              vertical: 12,
+                            ),
+                            child: Text(
+                              'Logout',
+                              style: TextStyle(
+                                fontSize: 16,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
                         ),
                       ),
                     ),
-                  ),
+                  ],
                 ),
               ),
             ],

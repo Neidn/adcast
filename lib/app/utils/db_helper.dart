@@ -24,6 +24,7 @@ class DBHelper {
   }
 
   _onCreate(Database db, int version) async {
+    // Create tables
     for (var table in appDatabaseTable.entries) {
       Map<String, String> columns = table.value;
       String query = '''
@@ -33,6 +34,16 @@ class DBHelper {
       )
       ''';
       await db.execute(query);
+    }
+
+    // Create Indexes
+    for (var index in appDatabaseIndexes.entries) {
+      for (var column in index.value) {
+        String query = '''
+        CREATE INDEX IF NOT EXISTS ${index.key}_${column}_index ON ${index.key} ($column)
+        ''';
+        await db.execute(query);
+      }
     }
   }
 }

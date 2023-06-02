@@ -41,6 +41,8 @@ const appGroupsTable = 'groups';
 const appKeywordsTable = 'keywords';
 const appKeywordInfoTable = 'keywordInfo';
 const appUserInfoTable = 'userInfo';
+
+// Table SQL
 const Map<String, Map<String, String>> appDatabaseTable = {
   appCampaignsTable: {
     'campaign_key': 'TEXT',
@@ -89,6 +91,29 @@ const Map<String, Map<String, String>> appDatabaseTable = {
     'userStatus': 'TEXT',
     'customerKey': 'TEXT',
   }
+};
+
+
+// Table Indexes SQL
+const Map<String, List<String>> appDatabaseIndexes = {
+  appCampaignsTable: [
+    "id",
+  ],
+  appGroupsTable: [
+    "id",
+    "campaign_key",
+  ],
+  appKeywordsTable: [
+    "id",
+    "keyword_key",
+    "user_lock",
+  ],
+  appKeywordInfoTable: [
+    "id",
+  ],
+  appUserInfoTable: [
+    "id",
+  ],
 };
 
 // App API Base Url

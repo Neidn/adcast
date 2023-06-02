@@ -91,7 +91,7 @@ class LoginController extends GetxController {
           UserResponseData.fromJson(response.data);
 
       if (userResponseData.userResponseDataEmptyCheck() == false) {
-        throw Exception('Response Data is Empty');
+        throw Exception('Response Data is Empty Url : $userAuthBaseUrl');
       }
 
       // Save Access Token To Storage

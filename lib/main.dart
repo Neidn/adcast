@@ -31,7 +31,9 @@ Future<void> main() async {
     GetMaterialApp(
       textDirection: TextDirection.ltr,
       debugShowCheckedModeBanner: false,
-      theme: appTheme,
+      theme: appLightTheme,
+      darkTheme: appDarkTheme,
+      themeMode: ThemeMode.system,
       defaultTransition: Transition.fade,
       initialRoute: Routes.main,
       initialBinding: BindingsBuilder(() {

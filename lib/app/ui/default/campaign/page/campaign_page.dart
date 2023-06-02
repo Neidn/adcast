@@ -6,6 +6,7 @@ import '/app/ui/theme/app_colors.dart';
 import '/app/routes/app_pages.dart';
 
 import '/app/ui/default/widgets/default_logo_widget.dart';
+import '/app/ui/default/campaign/widget/group_name_widget.dart';
 
 import '/app/data/model/campaign/campaign_data.dart';
 import '/app/data/model/campaign/group_data.dart';
@@ -38,17 +39,22 @@ class CampaignPage extends GetView<CampaignController> {
       appBar: AppBar(
         title: const DefaultLogoWidget(),
         centerTitle: false,
-        backgroundColor: mobileBackGroundColor,
+        backgroundColor: Get.theme.appBarTheme.backgroundColor,
       ),
       body: GetX<CampaignController>(
         builder: (_) {
           // print all of the campaign data
           return Column(
             children: [
+              // loading indicator
               _.isLoading
                   ? const LinearProgressIndicator()
                   : const Padding(padding: EdgeInsets.only(top: 0)),
+
+              // Divider
               const Divider(),
+
+              // Campaign List
               Expanded(
                 child: ListView.builder(
                   padding: const EdgeInsets.only(left: 8),
@@ -62,10 +68,32 @@ class CampaignPage extends GetView<CampaignController> {
 
                     final String campaignName =
                         campaignData.campaignName as String;
-                    final String campaignKey = campaignData.campaignKey as String;
+                    final String campaignKey =
+                        campaignData.campaignKey as String;
+
+                    final bool campaignLock =
+                        campaignData.userLock == "ON" ? true : false;
+                    final String campaignStatusReason =
+                        campaignData.statusReason as String; // 잠금 사유
 
                     return ExpansionTile(
-                      title: Text(campaignName),
+                      title: RichText(
+                        text: TextSpan(
+                          text: campaignName,
+                          style: Get.textTheme.displayMedium,
+                          children: [
+                            const TextSpan(text: " "),
+                            TextSpan(
+                              text:
+                                  campaignLock ? "($campaignStatusReason)" : "",
+                              style: const TextStyle(
+                                color: Colors.red,
+                                fontSize: 12,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
                       subtitle: Text(
                         "광고 그룹 : ${groupData.length} 개",
                         style: const TextStyle(
@@ -73,6 +101,8 @@ class CampaignPage extends GetView<CampaignController> {
                           fontSize: 12,
                         ),
                       ),
+
+                      // Campaign List
                       children: List.generate(
                         groupData.length,
                         (index) {
@@ -80,20 +110,26 @@ class CampaignPage extends GetView<CampaignController> {
                               groupData[index].groupKey as String;
                           final String groupName =
                               groupData[index].groupName as String;
+                          final bool groupLock =
+                              groupData[index].userLock == "ON" ? true : false;
+                          final String groupStatusReason =
+                              groupData[index].statusReason as String; // 잠금 사유
 
-                          return InkWell(
-                            onTap: () => loadKeywordData(
-                              campaignKey,
-                              groupKey,
-                            ),
-                            child: Container(
-                              width: double.infinity,
-                              alignment: Alignment.centerLeft,
-                              padding: const EdgeInsets.symmetric(
-                                vertical: 8,
-                                horizontal: 32,
+                          return SizedBox(
+                            child: InkWell(
+                              onTap: () {
+                                if (!groupLock) {
+                                  loadKeywordData(
+                                    campaignKey,
+                                    groupKey,
+                                  );
+                                }
+                              },
+                              child: GroupNameWidget(
+                                groupLock,
+                                groupName,
+                                groupStatusReason,
                               ),
-                              child: Text(groupName),
                             ),
                           );
                         },

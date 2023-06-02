@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class CommonTextFormFieldWidget extends StatelessWidget {
   final TextEditingController textEditingController;
@@ -45,7 +46,7 @@ class CommonTextFormFieldWidget extends StatelessWidget {
           vertical: 6,
         ),
       ),
-      style: const TextStyle(color: Colors.white),
+      style: Get.textTheme.titleMedium,
       obscureText: false,
     );
   }

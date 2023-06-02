@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class PasswordTextFormFieldWidget extends StatelessWidget {
   final TextEditingController textEditingController;
@@ -58,7 +59,7 @@ class PasswordTextFormFieldWidget extends StatelessWidget {
           vertical: 6,
         ),
       ),
-      style: const TextStyle(color: Colors.white),
+      style: Get.textTheme.titleMedium,
     );
   }
 }

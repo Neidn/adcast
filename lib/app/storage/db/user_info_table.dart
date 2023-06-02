@@ -25,9 +25,12 @@ class UserInfoTable extends TableHelper {
   }
 
   @override
-  Future<List<Map<String, dynamic>>> select(Map<String, dynamic> data) {
-    // TODO: implement select
-    throw UnimplementedError();
+  Future<List<Map<String, dynamic>>> select(Map<String, dynamic> data) async {
+    return await database.query(
+      tableName,
+      where: 'id = ?',
+      whereArgs: [data['id']],
+    );
   }
 
   Future<int> userInfoInsert(UserInfoData userInfoData) async {

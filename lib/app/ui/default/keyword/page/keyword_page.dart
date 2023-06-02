@@ -23,7 +23,7 @@ class KeywordPage extends GetView<KeywordController> {
         appBar: AppBar(
           title: const DefaultLogoWidget(),
           centerTitle: false,
-          backgroundColor: mobileBackGroundColor,
+          backgroundColor: Get.theme.appBarTheme.backgroundColor,
           actions: [
             IconButton(
               onPressed: () => _.changeBidExceptionFilter(),
