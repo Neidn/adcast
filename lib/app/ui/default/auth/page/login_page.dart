@@ -20,7 +20,18 @@ class LoginPage extends GetView<LoginController> {
               key: _.loginFormKey,
               child: Column(
                 children: [
-                  Flexible(flex: 2, child: Container()),
+                  Flexible(flex: 1, child: Container()),
+
+                  // Logo
+                  Flexible(
+                    flex: 2,
+                    child: SizedBox(
+                      width: Get.width * 0.5,
+                      child: Image.asset('assets/images/logo.png'),
+                    ),
+                  ),
+
+                  // Login Form
                   LoginFormWidget(
                     formWidget: Column(
                       children: [

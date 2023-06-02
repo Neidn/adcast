@@ -39,8 +39,10 @@ final ThemeData appDarkTheme = ThemeData(
       fontSize: 12,
     ),
   ),
-  bottomAppBarTheme:
-      const BottomAppBarTheme(color: whiteColor, shadowColor: liteWhiteColor),
+  bottomAppBarTheme: const BottomAppBarTheme(
+    color: whiteColor,
+    shadowColor: liteWhiteColor,
+  ),
 );
 
 final ThemeData appLightTheme = ThemeData(
