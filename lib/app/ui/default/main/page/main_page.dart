@@ -1,7 +1,6 @@
+import 'package:adcast/app/ui/theme/app_colors.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
-
-import '/app/ui/theme/app_theme.dart';
 
 import '/app/routes/app_pages.dart';
 
@@ -24,12 +23,18 @@ class MainPage extends GetView<MainController> {
         ),
         bottomNavigationBar: BottomNavigationBar(
           currentIndex: _.currentIndex,
-          showSelectedLabels: navigationDefaultSet['showSelectedLabels'],
-          showUnselectedLabels: navigationDefaultSet['showUnselectedLabels'],
-          selectedItemColor: navigationDefaultSet['selectedItemColor'],
-          unselectedItemColor: navigationDefaultSet['unselectedItemColor'],
-          backgroundColor: navigationDefaultSet['backgroundColor'],
-          type: navigationDefaultSet['type'],
+          showSelectedLabels: false,
+          showUnselectedLabels: false,
+          selectedItemColor: _.isDarkMode
+              ? whiteColor
+              : blackColor,
+          unselectedItemColor: _.isDarkMode
+              ? liteWhiteColor
+              : liteBlackColor,
+          backgroundColor: _.isDarkMode
+              ? mobileDarkBackGroundColor
+              : mobileLightBackGroundColor,
+          type: BottomNavigationBarType.fixed,
           onTap: _.changePage,
           items: List.generate(
             AppPages.navigationScreensProperties.length,

@@ -6,6 +6,7 @@ import '/app/ui/theme/app_colors.dart';
 import '/app/controller/keyword/keyword_controller.dart';
 import '/app/data/model/keyword/keyword_data.dart';
 
+import '/app/controller/main/main_controller.dart';
 import '/app/ui/default/widgets/default_logo_widget.dart';
 
 import '/app/ui/default/keyword/widget/keyword_card_body_widget.dart';
@@ -23,7 +24,9 @@ class KeywordPage extends GetView<KeywordController> {
         appBar: AppBar(
           title: const DefaultLogoWidget(),
           centerTitle: false,
-          backgroundColor: Get.theme.appBarTheme.backgroundColor,
+          backgroundColor: MainController.to.isDarkMode
+              ? mobileDarkBackGroundColor
+              : mobileLightBackGroundColor,
           actions: [
             IconButton(
               onPressed: () => _.changeBidExceptionFilter(),
@@ -49,12 +52,15 @@ class KeywordPage extends GetView<KeywordController> {
             _.keywordListData.isEmpty
 
                 // No Data
-                ? const Center(
-                    child: Text(
-                      'No Data',
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
+                ? const Flexible(
+                    flex: 1,
+                    child: Center(
+                      child: Text(
+                        'No Data',
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
                   )

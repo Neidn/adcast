@@ -27,6 +27,13 @@ class MainController extends GetxController {
 
   set isBidException(bool value) => _isBidException.value = value;
 
+  // dark mode
+  final RxBool _isDarkMode = false.obs;
+
+  bool get isDarkMode => _isDarkMode.value;
+
+  set isDarkMode(bool value) => _isDarkMode.value = value;
+
   @override
   void dispose() {
     pageController.dispose();

@@ -1,8 +1,12 @@
+import 'package:adcast/app/ui/default/main/page/main_page.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '/app/storage/db/user_info_table.dart';
 import '/app/storage/db/campaigns_table.dart';
 import '/app/storage/db/groups_table.dart';
+
+import '/app/controller/main/main_controller.dart';
 
 import '/app/utils/global_variables.dart';
 
@@ -11,6 +15,7 @@ import '/app/data/model/campaign/campaign_data.dart';
 import '/app/data/model/campaign/group_data.dart';
 
 class ProfileController extends GetxController {
+
   // Database Table
   UserInfoTable userInfoTable = UserInfoTable(appUserInfoTable);
   GroupsTable groupsTable = GroupsTable(appGroupsTable);
@@ -62,6 +67,13 @@ class ProfileController extends GetxController {
     groupCount = campaignGroupMap.values
         .map((List<GroupData> e) => e.length)
         .reduce((int value, int element) => value + element);
+  }
+
+  void toggleThemeMode() async {
+    MainController.to.isDarkMode = !MainController.to.isDarkMode;
+    Get.changeThemeMode(
+      MainController.to.isDarkMode ? ThemeMode.dark : ThemeMode.light,
+    );
   }
 
   Future<void> getCampaignGroupMap() async {

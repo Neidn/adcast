@@ -30,7 +30,7 @@ class CampaignPage extends GetView<CampaignController> {
       (element) => element["route"] == Routes.keyword,
     );
 
-    MainController.to.changePage(index);
+    MainController.to.animateToPage(index);
   }
 
   @override
@@ -39,7 +39,9 @@ class CampaignPage extends GetView<CampaignController> {
       appBar: AppBar(
         title: const DefaultLogoWidget(),
         centerTitle: false,
-        backgroundColor: Get.theme.appBarTheme.backgroundColor,
+        backgroundColor: MainController.to.isDarkMode
+            ? mobileDarkBackGroundColor
+            : mobileLightBackGroundColor,
       ),
       body: GetX<CampaignController>(
         builder: (_) {

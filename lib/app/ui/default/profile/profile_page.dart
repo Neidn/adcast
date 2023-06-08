@@ -1,9 +1,10 @@
-import 'package:adcast/app/ui/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '/app/ui/default/widgets/default_logo_widget.dart';
+import '/app/ui/theme/app_colors.dart';
 
+import 'package:adcast/app/controller/main/main_controller.dart';
 import '/app/controller/profile/profile_controller.dart';
 
 import '/app/services/auth_service.dart';
@@ -89,17 +90,27 @@ class ProfilePage extends GetView<ProfileController> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const DefaultLogoWidget(),
-        centerTitle: false,
-        backgroundColor: Get.theme.appBarTheme.backgroundColor,
-      ),
-      body: GetX<ProfileController>(
-        builder: (_) {
-          final String userName = _.userInfoData.userName ?? '';
-
-          return Column(
+    return GetX<ProfileController>(
+      builder: (_) {
+        final String userName = _.userInfoData.userName ?? '';
+        return Scaffold(
+          appBar: AppBar(
+            title: const DefaultLogoWidget(),
+            centerTitle: false,
+            backgroundColor: MainController.to.isDarkMode
+                ? mobileDarkBackGroundColor
+                : mobileLightBackGroundColor,
+            actions: [
+              // change theme button
+              IconButton(
+                onPressed: () => _.toggleThemeMode(),
+                icon: Icon(
+                  MainController.to.isDarkMode ? Icons.wb_sunny : Icons.nightlight_round,
+                ),
+              ),
+            ],
+          ),
+          body: Column(
             children: [
               _.isLoading
                   ? const LinearProgressIndicator()
@@ -180,9 +191,9 @@ class ProfilePage extends GetView<ProfileController> {
                 ),
               ),
             ],
-          );
-        },
-      ),
+          ),
+        );
+      },
     );
   }
 }

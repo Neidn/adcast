@@ -39,9 +39,9 @@ final ThemeData appDarkTheme = ThemeData(
       fontSize: 12,
     ),
   ),
-  bottomAppBarTheme: const BottomAppBarTheme(
-    color: whiteColor,
-    shadowColor: liteWhiteColor,
+  appBarTheme: const AppBarTheme(
+    backgroundColor: mobileDarkBackGroundColor,
+    elevation: 0,
   ),
 );
 
@@ -79,17 +79,8 @@ final ThemeData appLightTheme = ThemeData(
       fontSize: 12,
     ),
   ),
-  bottomAppBarTheme: const BottomAppBarTheme(
-    color: blackColor,
-    shadowColor: liteBlackColor,
+  appBarTheme: const AppBarTheme(
+    backgroundColor: mobileLightBackGroundColor,
+    elevation: 0,
   ),
 );
-
-final Map<String, dynamic> navigationDefaultSet = {
-  "showSelectedLabels": false,
-  "showUnselectedLabels": false,
-  "selectedItemColor": Get.theme.bottomAppBarTheme.color,
-  "unselectedItemColor": Get.theme.bottomAppBarTheme.shadowColor,
-  "backgroundColor": Get.theme.scaffoldBackgroundColor,
-  "type": BottomNavigationBarType.fixed,
-};
