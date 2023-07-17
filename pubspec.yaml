@@ -51,6 +51,10 @@ dependencies:
   sqflite: ^2.2.8+4
   path: ^1.8.3
   flutter_launcher_icons: ^0.13.1
+  card_swiper: ^3.0.1
+  flutter_secure_storage: ^8.0.0
+  dotted_line: ^3.2.2
+  syncfusion_flutter_charts: ^22.1.38
 
 dev_dependencies:
   flutter_test:

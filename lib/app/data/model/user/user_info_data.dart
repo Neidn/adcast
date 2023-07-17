@@ -6,14 +6,16 @@ part 'user_info_data.g.dart';
 class UserInfoData {
   final String? userId;
   final String? userName;
-  final String? userStatus;
-  final String? customerKey;
+  final String? goods;
+  final String? expiryDate;
+  final String? rDay;
 
   UserInfoData({
     this.userId,
     this.userName,
-    this.userStatus,
-    this.customerKey,
+    this.goods,
+    this.expiryDate,
+    this.rDay,
   });
 
   factory UserInfoData.fromJson(Map<String, dynamic> json) =>
@@ -25,10 +27,6 @@ class UserInfoData {
     return (userId == null ||
         userId == '' ||
         userName == null ||
-        userName == '' ||
-        userStatus == null ||
-        userStatus == '' ||
-        customerKey == null ||
-        customerKey == '');
+        userName == '');
   }
 }

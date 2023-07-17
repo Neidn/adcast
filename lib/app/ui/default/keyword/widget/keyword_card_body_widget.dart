@@ -1,6 +1,5 @@
+import 'package:adcast/app/utils/common_convert.dart';
 import 'package:flutter/material.dart';
-
-import '/app/utils/global_variables.dart';
 
 class KeywordCardBodyWidget extends StatelessWidget {
   final String wishRank;

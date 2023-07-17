@@ -7,9 +7,9 @@ abstract class Routes {
 
   static const profile = _Paths.main + _Paths.profile;
   static const campaign = _Paths.main + _Paths.campaign;
+  static const group = _Paths.main + _Paths.group;
   static const keyword = _Paths.main + _Paths.keyword;
-  static const first = _Paths.main + _Paths.first;
-  static const second = _Paths.main + _Paths.second;
+  static const payment = _Paths.main + _Paths.payment;
 
   Routes._();
 }
@@ -20,7 +20,7 @@ abstract class _Paths {
   static const login = '/login';
   static const profile = '/profile';
   static const campaign = '/campaign';
+  static const group = '/group';
   static const keyword = '/ad-keyword';
-  static const first = '/first';
-  static const second = '/second';
+  static const payment = '/payment';
 }

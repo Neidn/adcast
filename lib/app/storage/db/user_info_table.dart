@@ -50,21 +50,11 @@ class UserInfoTable extends TableHelper {
     return UserInfoData.fromJson(result.first);
   }
 
-  Future<String> getCustomerKey() async {
-    UserInfoData userInfoData = await userInfoSelectOne();
-
-    return userInfoData.customerKey ?? '';
-  }
-
   Future<String> getUserId() async {
     return await userInfoSelectOne().then((value) => value.userId ?? '');
   }
 
   Future<String> getUserName() async {
     return await userInfoSelectOne().then((value) => value.userName ?? '');
-  }
-
-  Future<String> getUserStatus() async {
-    return await userInfoSelectOne().then((value) => value.userStatus ?? '');
   }
 }

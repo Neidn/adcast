@@ -7,7 +7,7 @@ class ApiResult {
   final String? status;
   final String? message;
   final String? totalResults;
-  final Map<String, dynamic>? data;
+  final List<Map<String, dynamic>>? data;
 
   ApiResult({
     this.status,
@@ -28,7 +28,6 @@ class ApiResult {
         status == null ||
         totalResults == "" ||
         totalResults == null ||
-        data == {} ||
         data == null) {
       return true;
     }

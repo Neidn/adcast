@@ -1,37 +1,20 @@
+import 'package:adcast/app/data/model/user/user_api_data.dart';
+import 'package:adcast/app/ui/default/campaign/widget/campaign_name_widget.dart';
+import 'package:adcast/app/ui/default/group/page/group_page.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '/app/ui/theme/app_colors.dart';
 
-import '/app/routes/app_pages.dart';
-
 import '/app/ui/default/widgets/default_logo_widget.dart';
-import '/app/ui/default/campaign/widget/group_name_widget.dart';
 
 import '/app/data/model/campaign/campaign_data.dart';
-import '/app/data/model/campaign/group_data.dart';
 
 import '/app/controller/main/main_controller.dart';
 import '/app/controller/campaign/campaign_controller.dart';
 
 class CampaignPage extends GetView<CampaignController> {
-  const CampaignPage({Key? key}) : super(key: key);
-
-  void loadKeywordData(
-    String campaignKey,
-    String groupKey,
-  ) async {
-    await controller.getKeyword(
-      campaignKey,
-      groupKey,
-    );
-
-    final int index = AppPages.navigationScreensProperties.indexWhere(
-      (element) => element["route"] == Routes.keyword,
-    );
-
-    MainController.to.animateToPage(index);
-  }
+  const CampaignPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -61,81 +44,72 @@ class CampaignPage extends GetView<CampaignController> {
                 child: ListView.builder(
                   padding: const EdgeInsets.only(left: 8),
                   scrollDirection: Axis.vertical,
-                  itemCount: _.campaignGroupMap.length,
+                  itemCount: _.userApiList.length,
                   itemBuilder: (context, index) {
-                    final CampaignData campaignData =
-                        _.campaignGroupMap.keys.elementAt(index);
-                    final List<GroupData> groupData =
-                        _.campaignGroupMap.values.elementAt(index);
+                    final UserApiData userApiData = _.userApiList[index];
 
-                    final String campaignName =
-                        campaignData.campaignName as String;
-                    final String campaignKey =
-                        campaignData.campaignKey as String;
-
-                    final bool campaignLock =
-                        campaignData.userLock == "ON" ? true : false;
-                    final String campaignStatusReason =
-                        campaignData.statusReason as String; // 잠금 사유
+                    final List<CampaignData> campaignDataList =
+                        _.userApiCampaignMap[userApiData.customerId] ?? [];
 
                     return ExpansionTile(
                       title: RichText(
                         text: TextSpan(
-                          text: campaignName,
+                          text: userApiData.customerName,
                           style: Get.textTheme.displayMedium,
-                          children: [
-                            const TextSpan(text: " "),
-                            TextSpan(
-                              text:
-                                  campaignLock ? "($campaignStatusReason)" : "",
-                              style: const TextStyle(
-                                color: Colors.red,
-                                fontSize: 12,
-                              ),
-                            ),
-                          ],
                         ),
                       ),
                       subtitle: Text(
-                        "광고 그룹 : ${groupData.length} 개",
-                        style: const TextStyle(
-                          color: Colors.grey,
-                          fontSize: 12,
-                        ),
+                        "광고 그룹 : ${_.userApiCampaignMap[userApiData.customerId]?.length} 개",
+                        style: Get.textTheme.titleSmall,
                       ),
-
-                      // Campaign List
-                      children: List.generate(
-                        groupData.length,
-                        (index) {
-                          final String groupKey =
-                              groupData[index].groupKey as String;
-                          final String groupName =
-                              groupData[index].groupName as String;
-                          final bool groupLock =
-                              groupData[index].userLock == "ON" ? true : false;
-                          final String groupStatusReason =
-                              groupData[index].statusReason as String; // 잠금 사유
-
-                          return SizedBox(
-                            child: InkWell(
-                              onTap: () {
-                                if (!groupLock) {
-                                  loadKeywordData(
-                                    campaignKey,
-                                    groupKey,
-                                  );
-                                }
-                              },
-                              child: GroupNameWidget(
-                                groupLock,
-                                groupName,
-                                groupStatusReason,
+                      children: campaignDataList.isEmpty
+                          ? [
+                              SizedBox(
+                                height: 100,
+                                child: Center(
+                                  child: Text(
+                                    "광고 그룹이 없습니다.",
+                                    style: Get.textTheme.titleMedium,
+                                  ),
+                                ),
                               ),
+                            ]
+                          : List.generate(
+                              campaignDataList.length,
+                              (index) {
+                                final CampaignData campaignData =
+                                    campaignDataList[index];
+
+                                final String campaignName =
+                                    campaignData.campaignName as String;
+                                final bool campaignLock =
+                                    campaignData.userLock == "ON"
+                                        ? true
+                                        : false;
+                                final String campaignStatusReason = campaignData
+                                    .statusReason as String; // 잠금 사유
+
+                                return SizedBox(
+                                  child: InkWell(
+                                    onTap: () async {
+                                      if (campaignLock) {
+                                        return;
+                                      }
+
+                                      Get.to(() => GroupPage(
+                                            campaignData: campaignData,
+                                          ));
+                                    },
+                                    child: CampaignNameWidget(
+                                      campaignLock: campaignLock,
+                                      campaignName: campaignName,
+                                      campaignStatusReason:
+                                          campaignStatusReason,
+                                    ),
+                                  ),
+                                );
+                              },
                             ),
-                          );
-                        },
-                      ),
                     );
                   },
                 ),

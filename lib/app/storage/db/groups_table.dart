@@ -58,4 +58,18 @@ class GroupsTable extends TableHelper {
     );
     return result.map((e) => GroupData.fromJson(e)).toList();
   }
+
+  Future<String> getGroupName({
+    required String campaignKey,
+    required String groupKey,
+  }) async {
+    List<Map<String, dynamic>> result = await database.query(
+      tableName,
+      where: 'campaign_key = ? AND group_key = ?',
+      whereArgs: [campaignKey, groupKey],
+      limit: 1,
+    );
+
+    return result.isNotEmpty ? result.first['group_name'] : '';
+  }
 }

@@ -11,11 +11,11 @@ class UserAuthImpl {
   Future<ApiResponse> postLogin(
     String userId,
     String userPwd,
-    String deviceToken,
+    String deviceID,
   ) async {
     try {
       ApiResponse apiResponse =
-          await _client.postLogin(userId, userPwd, deviceToken);
+          await _client.postLogin(userId, userPwd, deviceID);
 
       if (apiResponse.apiResponseCodeCheck() == false) {
         if (apiResponse.apiResponseLogoutCheck() == true) {

@@ -1,3 +1,6 @@
+import 'package:adcast/app/storage/db/campaigns_table.dart';
+import 'package:adcast/app/storage/db/groups_table.dart';
+import 'package:adcast/app/storage/db/user_api_table.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -24,9 +27,27 @@ class KeywordController extends GetxController {
   static KeywordController get to => Get.find();
 
   // Database Table
-  UserInfoTable userInfoTable = UserInfoTable(appUserInfoTable);
-  KeywordInfoTable keywordInfoTable = KeywordInfoTable(appKeywordInfoTable);
-  KeywordsTable keywordsTable = KeywordsTable(appKeywordsTable);
+  final UserInfoTable userInfoTable = UserInfoTable(appUserInfoTable);
+  final UserApiTable userApiTable = UserApiTable(appUserApiTable);
+  final KeywordInfoTable keywordInfoTable =
+      KeywordInfoTable(appKeywordInfoTable);
+  final KeywordsTable keywordsTable = KeywordsTable(appKeywordsTable);
+  final CampaignsTable campaignsTable = CampaignsTable(appCampaignsTable);
+  final GroupsTable groupsTable = GroupsTable(appGroupsTable);
+
+  // Customer Id
+  final RxString _customerId = ''.obs;
+
+  String get customerId => _customerId.value;
+
+  set customerId(String value) => _customerId.value = value;
+
+  // Title
+  final RxString _title = ''.obs;
+
+  String get title => _title.value;
+
+  set title(String value) => _title.value = value;
 
   // Scroll Controller
   final ScrollController _scrollController = ScrollController();
@@ -182,8 +203,7 @@ class KeywordController extends GetxController {
         return;
       }
 
-      String deviceToken = deviceTokenStorage.deviceToken;
-      String cid = userInfoData.customerKey ?? '';
+      String deviceToken = await deviceTokenStorage.getDeviceToken();
       String camId = keywordInfoData.campaignKey ?? '';
       String grId = keywordInfoData.groupKey ?? '';
       String pageSize = keywordInfoData.pageSize ?? defaultPageSizeString;
@@ -191,19 +211,23 @@ class KeywordController extends GetxController {
 
       ApiAdKeywordResponse response = await adKeywordImpl.getKeyword(
         deviceToken,
-        cid,
+        customerId,
         camId,
         grId,
         pageSize,
         page,
       );
 
+      if (response.apiResponseEmptyCheck()) {
+        throw Exception(response.response);
+      }
+
       // Keyword Info Data
       ApiAdKeywordResult apiAdKeywordResult =
           ApiAdKeywordResult.fromJson(response.data!);
 
       if (apiAdKeywordResult.apiResultEmptyCheck() == true) {
-        throw Exception('Data is Null');
+        throw Exception(response.response);
       }
 
       // Keyword Info Data
@@ -253,6 +277,33 @@ class KeywordController extends GetxController {
       );
     } finally {
       isNextLoading = false;
+    }
+  }
+
+  Future<void> getTitleName({
+    required String customerId,
+    required String campaignKey,
+    required String groupKey,
+  }) async {
+    try {
+      final String customerName = await userApiTable.getCustomerName(
+        customerId: customerId,
+      );
+
+      final String campaignName = await campaignsTable.getCampaignName(
+        customerId: customerId,
+        campaignKey: campaignKey,
+      );
+
+      final String groupName = await groupsTable.getGroupName(
+        campaignKey: campaignKey,
+        groupKey: groupKey,
+      );
+
+      title = '$customerName > $campaignName >\n'
+          '$groupName';
+    } catch (e) {
+      rethrow;
     }
   }
 }

@@ -4,7 +4,8 @@ import '../storage/device/device_id_storage.dart';
 
 class SettingsService extends GetxService {
   void init() async {
-    if (deviceIdStorage.deviceId.isEmpty) {
+    final String deviceId = await deviceIdStorage.getDeviceId();
+    if (deviceId.isEmpty) {
       await deviceIdStorage.generateDeviceId();
     }
     print('$runtimeType delays 1 sec');

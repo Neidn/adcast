@@ -1,3 +1,6 @@
+import 'package:adcast/app/storage/db/bank_table.dart';
+import 'package:adcast/app/storage/db/goods_table.dart';
+import 'package:adcast/app/storage/db/user_api_table.dart';
 import 'package:get/get.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 
@@ -28,6 +31,9 @@ class AuthService extends GetxService {
   final KeywordInfoTable keywordInfoTable =
       KeywordInfoTable(appKeywordInfoTable);
   final KeywordsTable keywordsTable = KeywordsTable(appKeywordsTable);
+  final GoodsTable goodsTable = GoodsTable(appGoodsInfoTable);
+  final BankTable bankTable = BankTable(appBankInfoTable);
+  final UserApiTable userApiTable = UserApiTable(appUserApiTable);
 
   // Authenticated
   final RxBool _authenticated = false.obs;
@@ -43,13 +49,6 @@ class AuthService extends GetxService {
 
   set isLoading(bool value) => _isLoading.value = value;
 
-  // Device Token
-  final RxString _deviceToken = ''.obs;
-
-  String get deviceToken => _deviceToken.value;
-
-  set deviceToken(String value) => _deviceToken.value = value;
-
   @override
   void onInit() async {
     try {
@@ -62,13 +61,8 @@ class AuthService extends GetxService {
       await logout();
     }
 
-    super.onInit();
-  }
-
-  @override
-  void onReady() {
     FlutterNativeSplash.remove();
-    super.onReady();
+    super.onInit();
   }
 
   Future<void> logout() async {
@@ -88,6 +82,15 @@ class AuthService extends GetxService {
     // User Storage
     await userInfoTable.deleteAll();
 
+    // Goods Storage
+    await goodsTable.deleteAll();
+
+    // Bank Storage
+    await bankTable.deleteAll();
+
+    // api table
+    await userApiTable.deleteAll();
+
     Get.offAllNamed(Routes.login);
   }
 
@@ -96,8 +99,9 @@ class AuthService extends GetxService {
     try {
       int userInfoCount = await userInfoTable.queryRowCount();
 
-      if (deviceTokenStorage.emptyDeviceTokenCheck() == true ||
-          userInfoCount != 1) {
+      final bool deviceTokenResult =
+          await deviceTokenStorage.emptyDeviceTokenCheck();
+      if (deviceTokenResult == true || userInfoCount != 1) {
         authenticated = false;
       } else {
         authenticated = true;
@@ -107,14 +111,12 @@ class AuthService extends GetxService {
     }
   }
 
-  void resetDeviceToken() {
-    deviceToken = '';
-    deviceTokenStorage.deviceToken = '';
+  void resetDeviceToken() async {
+    await deviceTokenStorage.resetDeviceToken();
   }
 
   void setDeviceToken(String value) {
-    deviceToken = value;
-    deviceTokenStorage.deviceToken = value;
+    deviceTokenStorage.setDeviceToken(value);
   }
 
   Future<void> sessionDeviceToken() async {
@@ -122,6 +124,7 @@ class AuthService extends GetxService {
     ApiAuthImpl apiAuthImpl = ApiAuthImpl();
 
     try {
+      final deviceToken = await deviceTokenStorage.getDeviceToken();
       if (deviceToken.isEmpty == true) {
         throw Exception('Empty Device Token');
       }
@@ -144,7 +147,9 @@ class AuthService extends GetxService {
 
       setDeviceToken(apiAuth.deviceToken ?? '');
 
-      if (deviceTokenStorage.emptyDeviceTokenCheck() == true) {
+      final bool deviceTokenResult =
+          await deviceTokenStorage.emptyDeviceTokenCheck();
+      if (deviceTokenResult == true) {
         await logout();
       }
     } catch (e) {

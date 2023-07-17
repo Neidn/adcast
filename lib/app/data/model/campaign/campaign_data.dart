@@ -5,6 +5,8 @@ part 'campaign_data.g.dart';
 @JsonSerializable()
 class CampaignData {
   final int? id;
+  @JsonKey(name: 'customer_id')
+  final String? customerId;
   @JsonKey(name: 'campaign_key')
   final String? campaignKey;
   @JsonKey(name: 'campaign_name')
@@ -18,6 +20,7 @@ class CampaignData {
 
   CampaignData({
     this.id,
+    this.customerId,
     this.campaignKey,
     this.campaignName,
     this.message,

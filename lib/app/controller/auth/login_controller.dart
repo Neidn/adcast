@@ -1,3 +1,5 @@
+import 'package:adcast/app/data/model/user/user_api_data.dart';
+import 'package:adcast/app/storage/db/user_api_table.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -26,6 +28,12 @@ import '/app/data/repository/user_auth_impl.dart';
 
 // Request => Login
 class LoginController extends GetxController {
+  // DB Table
+  CampaignsTable campaignsTable = CampaignsTable(appCampaignsTable);
+  UserInfoTable userInfoTable = UserInfoTable(appUserInfoTable);
+  GroupsTable groupsTable = GroupsTable(appGroupsTable);
+  UserApiTable userApiTable = UserApiTable(appUserApiTable);
+
   // Loading
   final RxBool _isLoading = false.obs;
 
@@ -79,56 +87,57 @@ class LoginController extends GetxController {
     try {
       String id = idController.text.trim();
       String password = passwordController.text.trim();
-      String deviceToken = deviceIdStorage.deviceId;
+      String deviceID = await deviceIdStorage.getDeviceId();
 
       ApiResponse response = await userAuthImpl.postLogin(
         id,
         password,
-        deviceToken,
+        deviceID,
       );
 
       UserResponseData userResponseData =
           UserResponseData.fromJson(response.data);
 
       if (userResponseData.userResponseDataEmptyCheck() == false) {
-        throw Exception('Response Data is Empty Url : $userAuthBaseUrl');
+        throw Exception(response.response);
       }
 
       // Save Access Token To Storage
       AuthService.to.setDeviceToken(userResponseData.accessToken ?? '');
 
-      if (deviceTokenStorage.emptyDeviceTokenCheck() == true) {
+      final bool deviceTokenResult =
+          await deviceTokenStorage.emptyDeviceTokenCheck();
+      if (deviceTokenResult == true) {
         throw Exception('Try Again');
       }
 
       // Save User info To Database
-      UserInfoTable userInfoTable = UserInfoTable(appUserInfoTable);
-      int result = await userInfoTable.userInfoInsert(
+      final List<UserApiData> userApiListData = [];
+      for (var customer in userResponseData.customer ?? []) {
+        userApiListData.add(
+          UserApiData(
+            status: customer['status'],
+            customerId: customer['id'],
+            customerName: customer['name'],
+            bizmoney: customer['bizmoney'],
+          ),
+        );
+      }
+
+      await userApiTable.userApiInsertAll(userApiListData);
+
+      final int result = await userInfoTable.userInfoInsert(
         UserInfoData(
-          userId: id,
+          userId: userResponseData.userid,
           userName: userResponseData.username,
-          userStatus: userResponseData.customer!['status'],
-          customerKey: userResponseData.customer!['id'],
+          goods: userResponseData.goods,
+          expiryDate: userResponseData.expiryDate,
+          rDay: userResponseData.rDay,
         ),
       );
 
       if (result == 0) {
         throw Exception('Try Again');
-      }
-
-      // parse campaign data
-      ApiResult campaignResult = ApiResult.fromJson(userResponseData.campaign!);
-
-      if (campaignResult.apiResultEmptyCheck() == true) {
-        throw Exception('Try Again');
-      }
-
-      if (campaignResult.apiResultStatusCheck() == false) {
-        throw Exception(campaignResult.message);
-      }
-
-      if (campaignResult.dataLengthCheck() == false) {
-        throw Exception('Data Fetching Error');
       }
 
       // Save Campaign Data To Database
@@ -137,53 +146,71 @@ class LoginController extends GetxController {
       // Save Group Data To Database
       List<GroupData> groupListData = [];
 
-      for (var campaignData in campaignResult.data!.entries) {
-        String campaignKey = campaignData.key;
+      // parse campaign data
+      for (var campaign in userResponseData.campaign ?? []) {
+        // List<dynamic> to List<Map<String, dynamic>>
+        final List<Map<String, dynamic>> campaignList = [];
 
-        Map<String, dynamic> groupData = campaignData.value['group'];
-
-        campaignData.value['campaign_key'] = campaignKey;
-        campaignData.value['campaign_name'] = campaignData.value['name'];
-
-        campaignData.value.remove('group');
-        campaignData.value.remove('name');
-
-        ApiResult groupResult = ApiResult.fromJson(groupData);
-
-        if (groupResult.apiResultEmptyCheck() == true) {
-          throw Exception('Try Again');
+        for (var campaignData in campaign['data'] ?? []) {
+          campaignList.add(campaignData);
         }
 
-        if (groupResult.apiResultStatusCheck() == false) {
-          throw Exception(groupResult.message);
+        final ApiResult campaignResult = ApiResult(
+          status: campaign['status'],
+          message: campaign['message'] ?? '',
+          totalResults: '${campaign['totalResults'] ?? 0}',
+          data: campaignList,
+        );
+
+        if (campaignResult.apiResultEmptyCheck() == true) {
+          continue;
         }
 
-        if (groupResult.dataLengthCheck() == false) {
-          throw Exception('Data Fetching Error');
-        }
+        for (var campaignData in campaignList) {
+          Map<String, dynamic> group = campaignData['group'];
 
-        campaignListData.add(CampaignData.fromJson(campaignData.value));
+          campaignData['customer_id'] = campaignData['customer_id'];
+          campaignData['campaign_key'] = campaignData['cid'];
+          campaignData['campaign_name'] = campaignData['name'];
 
-        for (var groupData in groupResult.data!.entries) {
-          String groupKey = groupData.key;
-          groupData.value['group_key'] = groupKey;
-          groupData.value['campaign_key'] = campaignKey;
-          groupData.value['group_name'] = groupData.value['name'];
+          campaignData.remove('name');
+          campaignData.remove('group');
 
-          groupData.value.remove('campaign');
+          campaignListData.add(CampaignData.fromJson(campaignData));
 
-          groupListData.add(GroupData.fromJson(groupData.value));
+          final List<Map<String, dynamic>> groupList = [];
+
+          for (var groupData in group['data'] ?? []) {
+            groupList.add(groupData);
+          }
+
+          ApiResult groupResult = ApiResult(
+            status: group['status'],
+            message: group['message'] ?? '',
+            totalResults: '${group['totalResults'] ?? 0}',
+            data: groupList,
+          );
+
+          if (groupResult.apiResultEmptyCheck() == true) {
+            continue;
+          }
+          for (var groupData in groupList) {
+            groupData['group_key'] = groupData['grid'];
+            groupData['group_name'] = groupData['name'];
+            groupData['campaign_key'] = campaignData['cid'];
+
+            groupData.remove('grid');
+            groupData.remove('name');
+
+            groupListData.add(GroupData.fromJson(groupData));
+          }
         }
       }
 
       // Save Campaign Data To Database
-      CampaignsTable campaignsTable = CampaignsTable(appCampaignsTable);
-
       campaignsTable.campaignsDataInsert(campaignListData);
 
       // Save Group Data To Database
-      GroupsTable groupsTable = GroupsTable(appGroupsTable);
-
       groupsTable.groupsDataInsert(groupListData);
 
       await AuthService.to.loginCheck();

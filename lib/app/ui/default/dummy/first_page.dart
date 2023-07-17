@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 
 import '/app/ui/default/widgets/default_logo_widget.dart';
 import '/app/controller/main/main_controller.dart';

@@ -6,9 +6,12 @@ class CampaignNameWidget extends StatelessWidget {
   final String campaignName;
   final String campaignStatusReason;
 
-  const CampaignNameWidget(
-      this.campaignLock, this.campaignName, this.campaignStatusReason,
-      {super.key});
+  const CampaignNameWidget({
+    super.key,
+    required this.campaignLock,
+    required this.campaignName,
+    required this.campaignStatusReason,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -27,17 +30,12 @@ class CampaignNameWidget extends StatelessWidget {
           RichText(
             text: TextSpan(
               text: campaignName,
-              style: const TextStyle(
-                fontSize: 16,
-              ),
+              style: Get.textTheme.titleMedium,
               children: [
                 const TextSpan(text: ' '),
                 TextSpan(
                   text: campaignLock ? campaignStatusReason : "",
-                  style: const TextStyle(
-                    color: Colors.grey,
-                    fontSize: 12,
-                  ),
+                  style: Get.textTheme.titleSmall,
                 ),
               ],
             ),

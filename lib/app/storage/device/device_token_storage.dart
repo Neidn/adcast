@@ -1,32 +1,39 @@
-import 'package:get_storage/get_storage.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
-import '/app/utils/global_variables.dart';
+import 'package:adcast/app/utils/global_variables.dart';
 
 class DeviceTokenStorage {
-  final _box = GetStorage(appStorage);
+  final _storage = FlutterSecureStorage(
+    aOptions: getAndroidOptions(),
+    iOptions: getIOSOptions(),
+  );
 
   // Device Token
-  String get deviceToken => _box.read(deviceTokenStorageKey) ?? '';
+  Future<String> getDeviceToken() async {
+    return await _storage.read(key: deviceTokenStorageKey) ?? '';
+  }
 
-  set deviceToken(String value) => _box.write(deviceTokenStorageKey, value);
+  void setDeviceToken(String value) async {
+    await _storage.write(key: deviceTokenStorageKey, value: value);
+  }
 
   Future<void> resetDeviceToken() async {
     try {
-      await _box.remove(deviceTokenStorageKey);
+      await _storage.delete(key: deviceTokenStorageKey);
     } catch (e) {
       rethrow;
     }
   }
 
-  bool emptyDeviceTokenCheck() {
+  Future<bool> emptyDeviceTokenCheck() async {
+    final String deviceToken = await deviceTokenStorage.getDeviceToken();
     try {
-      if (deviceTokenStorage.deviceToken == '' ||
-          deviceTokenStorage.deviceToken.isEmpty == true) {
+      if (deviceToken == '' || deviceToken.isEmpty == true) {
         return true;
       }
     } catch (e) {
-      resetDeviceToken();
-      return true;
+      // await resetDeviceToken();
+      return false;
     }
     return false;
   }

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 
-import '/app/ui/theme/app_colors.dart';
+import 'package:adcast/app/ui/theme/app_colors.dart';
 
 const _fontFamily = 'NotoSansKR';
 
@@ -43,6 +42,17 @@ final ThemeData appDarkTheme = ThemeData(
     backgroundColor: mobileDarkBackGroundColor,
     elevation: 0,
   ),
+  dataTableTheme: DataTableThemeData(
+    dividerThickness: 0,
+    headingRowHeight: 0,
+    dataRowColor: MaterialStateProperty.all<Color>(
+      mobileDarkTableBorderColor,
+    ),
+    dataTextStyle: const TextStyle(
+      fontWeight: FontWeight.bold,
+      color: whiteColor,
+    ),
+  ),
 );
 
 final ThemeData appLightTheme = ThemeData(
@@ -82,5 +92,16 @@ final ThemeData appLightTheme = ThemeData(
   appBarTheme: const AppBarTheme(
     backgroundColor: mobileLightBackGroundColor,
     elevation: 0,
+  ),
+  dataTableTheme: DataTableThemeData(
+    dividerThickness: 0,
+    headingRowHeight: 0,
+    dataRowColor: MaterialStateProperty.all<Color>(
+      mobileLightTableBorderColor,
+    ),
+    dataTextStyle: const TextStyle(
+      fontWeight: FontWeight.bold,
+      color: blackColor,
+    ),
   ),
 );

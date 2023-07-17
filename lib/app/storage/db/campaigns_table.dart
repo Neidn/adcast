@@ -52,8 +52,24 @@ class CampaignsTable extends TableHelper {
   }
 
   Future<List<CampaignData>> getCampaignListData() async {
-    List<Map<String, dynamic>> result = await database.query(tableName);
+    List<Map<String, dynamic>> result = await database.query(
+      tableName,
+    );
 
     return result.map((e) => CampaignData.fromJson(e)).toList();
+  }
+
+  Future<String> getCampaignName({
+    required String customerId,
+    required String campaignKey,
+  }) async {
+    List<Map<String, dynamic>> result = await database.query(
+      tableName,
+      where: 'customer_id = ? AND campaign_key = ?',
+      whereArgs: [customerId, campaignKey],
+      limit: 1,
+    );
+
+    return result.isNotEmpty ? result.first['campaign_name'] : '';
   }
 }

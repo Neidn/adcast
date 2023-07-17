@@ -10,7 +10,9 @@ ApiResult _$ApiResultFromJson(Map<String, dynamic> json) => ApiResult(
       status: json['status'] as String?,
       message: json['message'] as String?,
       totalResults: json['totalResults'] as String?,
-      data: json['data'] as Map<String, dynamic>?,
+      data: (json['data'] as List<dynamic>?)
+          ?.map((e) => e as Map<String, dynamic>)
+          .toList(),
     );
 
 Map<String, dynamic> _$ApiResultToJson(ApiResult instance) => <String, dynamic>{

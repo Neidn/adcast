@@ -8,13 +8,21 @@ class UserResponseData {
   final String? username;
   @JsonKey(name: 'access_token')
   final String? accessToken;
-  final Map<String, dynamic>? customer;
-  final Map<String, dynamic>? campaign;
+  final String? goods;
+  @JsonKey(name: 'expiry_date')
+  final String? expiryDate;
+  @JsonKey(name: 'r_day')
+  final String? rDay;
+  final List<Map<String, dynamic>>? customer;
+  final List<Map<String, dynamic>>? campaign;
 
   UserResponseData({
     this.userid,
     this.username,
     this.accessToken,
+    this.goods,
+    this.expiryDate,
+    this.rDay,
     this.customer,
     this.campaign,
   });
@@ -31,9 +39,7 @@ class UserResponseData {
         username == null ||
         accessToken == "" ||
         accessToken == null ||
-        customer == {} ||
         customer == null ||
-        campaign == {} ||
         campaign == null) {
       return false;
     } else {

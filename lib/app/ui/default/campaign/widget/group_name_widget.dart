@@ -6,9 +6,12 @@ class GroupNameWidget extends StatelessWidget {
   final String groupName;
   final String groupStatusReason;
 
-  const GroupNameWidget(this.groupLock, this.groupName, this.groupStatusReason,
-      {Key? key})
-      : super(key: key);
+  const GroupNameWidget({
+    super.key,
+    required this.groupLock,
+    required this.groupName,
+    required this.groupStatusReason,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -23,6 +26,7 @@ class GroupNameWidget extends StatelessWidget {
               color: Get.theme.secondaryHeaderColor,
             ),
       title: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           RichText(
             text: TextSpan(
@@ -32,11 +36,16 @@ class GroupNameWidget extends StatelessWidget {
                 const TextSpan(text: ' '),
                 TextSpan(
                   text: groupLock ? groupStatusReason : "",
-                  style: Get.textTheme.titleSmall
+                  style: Get.textTheme.titleSmall,
                 ),
               ],
             ),
           ),
+          if (!groupLock)
+            Icon(
+              Icons.arrow_forward_ios,
+              color: Get.theme.secondaryHeaderColor,
+            ),
         ],
       ),
     );

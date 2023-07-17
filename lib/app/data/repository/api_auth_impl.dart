@@ -30,7 +30,7 @@ class ApiAuthImpl {
     } catch (e) {
       return ApiResponse(
         responseCode: "400",
-        request: 'CheckSession | $deviceToken',
+        request: e.toString(),
         response: 'Failed Try Again',
       );
     }
