@@ -1,6 +1,5 @@
 import 'package:adcast/app/controller/group/group_controller.dart';
 import 'package:adcast/app/controller/payment/payment_controller.dart';
-import 'package:adcast/app/services/auth_service.dart';
 import 'package:get/get.dart';
 
 import '/app/controller/main/main_controller.dart';

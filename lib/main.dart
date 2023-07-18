@@ -16,11 +16,11 @@ import 'app/storage/device/device_id_storage.dart';
 
 Future<void> initServices(WidgetsBinding widgetsBinding) async {
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
-  print('starting services ...');
+  debugPrint('starting services ...');
 
   await Get.putAsync(() => DbService().init());
   Get.put(SettingsService()).init();
-  print('All services started...');
+  debugPrint('All services started...');
 }
 
 Future<void> main() async {

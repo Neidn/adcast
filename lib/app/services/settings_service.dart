@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../storage/device/device_id_storage.dart';
@@ -8,8 +9,8 @@ class SettingsService extends GetxService {
     if (deviceId.isEmpty) {
       await deviceIdStorage.generateDeviceId();
     }
-    print('$runtimeType delays 1 sec');
+    debugPrint('$runtimeType delays 1 sec');
     await 1.delay();
-    print('$runtimeType ready!');
+    debugPrint('$runtimeType ready!');
   }
 }

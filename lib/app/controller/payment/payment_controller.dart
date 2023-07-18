@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:adcast/app/controller/profile/profile_controller.dart';
 import 'package:adcast/app/data/model/api/api_response.dart';
 import 'package:adcast/app/data/model/payment/bank_data.dart';
@@ -7,11 +5,11 @@ import 'package:adcast/app/data/model/payment/bid_data.dart';
 import 'package:adcast/app/data/model/payment/good_data.dart';
 import 'package:adcast/app/data/model/payment/payment_data.dart';
 import 'package:adcast/app/data/repository/payment_data_impl.dart';
-import 'package:adcast/app/services/auth_service.dart';
 import 'package:adcast/app/storage/db/bank_table.dart';
 import 'package:adcast/app/storage/db/goods_table.dart';
 import 'package:adcast/app/storage/device/device_token_storage.dart';
 import 'package:adcast/app/utils/global_variables.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class PaymentController extends GetxController {
@@ -99,7 +97,7 @@ class PaymentController extends GetxController {
 
       await bankTable.banksDataInsert(bankData);
     } catch (e) {
-      print(e.toString());
+      debugPrint(e.toString());
     }
   }
 
@@ -141,7 +139,7 @@ class PaymentController extends GetxController {
       goodsData = goodDataList;
       return goodDataList;
     } catch (e) {
-      print(e.toString());
+      debugPrint(e.toString());
       return [];
     }
   }
@@ -157,7 +155,7 @@ class PaymentController extends GetxController {
 
       bankData = BankData.fromJson(bankDataList.first);
     } catch (e) {
-      print(e.toString());
+      debugPrint(e.toString());
     }
   }
 }

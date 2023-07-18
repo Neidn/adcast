@@ -1,4 +1,3 @@
-import 'package:adcast/app/data/model/payment/bid_data.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'good_data.g.dart';

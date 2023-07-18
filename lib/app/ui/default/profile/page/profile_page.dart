@@ -2,7 +2,6 @@ import 'package:adcast/app/data/model/user/user_api_data.dart';
 import 'package:adcast/app/ui/default/profile/widget/account_info_card.dart';
 import 'package:adcast/app/ui/default/profile/widget/bid_count_pie_chart.dart';
 import 'package:adcast/app/ui/default/profile/widget/logout_button.dart';
-import 'package:adcast/app/utils/common_convert.dart';
 import 'package:dotted_line/dotted_line.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -66,8 +65,6 @@ class ProfilePage extends GetView<ProfileController> {
 
   @override
   Widget build(BuildContext context) {
-    final Size size = MediaQuery.of(context).size;
-
     return GetX<ProfileController>(
       builder: (_) {
         final String userName = _.userInfoData.userName ?? '';

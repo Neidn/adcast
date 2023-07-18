@@ -1,5 +1,3 @@
-import 'package:adcast/app/controller/main/main_controller.dart';
-import 'package:adcast/app/ui/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
