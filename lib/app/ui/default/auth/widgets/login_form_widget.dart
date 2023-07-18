@@ -16,7 +16,7 @@ class LoginFormWidget extends StatelessWidget {
         decoration: const BoxDecoration(
           color: Colors.white24,
           borderRadius: BorderRadius.all(
-            Radius.circular(60),
+            Radius.circular(20),
           ),
           boxShadow: [
             BoxShadow(

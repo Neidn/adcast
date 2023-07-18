@@ -1,3 +1,4 @@
+import 'package:adcast/app/data/model/payment/bid_data.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'good_data.g.dart';
@@ -8,14 +9,22 @@ class GoodData {
   final String? name;
   final String? api;
   final String? price;
-  final Map<String, dynamic>? bid;
+  final String? total;
+  final String? three;
+  final String? five;
+  final String? ten;
+  final String? thirty;
 
   GoodData({
     this.id,
     this.name,
     this.api,
     this.price,
-    this.bid,
+    this.total,
+    this.three,
+    this.five,
+    this.ten,
+    this.thirty,
   });
 
   factory GoodData.fromJson(Map<String, dynamic> json) =>

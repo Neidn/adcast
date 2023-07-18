@@ -181,6 +181,7 @@ class ProfilePage extends GetView<ProfileController> {
                 LogoutButton(
                   logOut: logOut,
                 ),
+                const SizedBox(height: 16),
               ],
             ),
           ),

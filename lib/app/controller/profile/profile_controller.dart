@@ -21,6 +21,8 @@ import '/app/utils/global_variables.dart';
 import '/app/data/model/user/user_info_data.dart';
 
 class ProfileController extends GetxController {
+  static ProfileController get to => Get.find();
+
   // Database Table
   UserInfoTable userInfoTable = UserInfoTable(appUserInfoTable);
   GroupsTable groupsTable = GroupsTable(appGroupsTable);
@@ -67,7 +69,6 @@ class ProfileController extends GetxController {
   @override
   void onInit() async {
     userInfoData = await userInfoTable.userInfoSelectOne();
-    maxBidData = await getMaxBidInfo();
     await getBidInfo();
     await getUserApiList();
     super.onInit();
@@ -86,15 +87,22 @@ class ProfileController extends GetxController {
     // Get GoodData.bid which is same as UserInfoData.goods
     var goodData = goodDataList.firstWhere(
       (element) => element.name == userInfoData.goods,
-      orElse: () => GoodData(),
+      orElse: () => GoodData(
+        name: '3',
+        total: '1',
+        three: '1',
+        five: '1',
+        ten: '1',
+        thirty: '1',
+      ),
     );
 
     return BidData(
-      total: "${goodData.bid!['total'] ?? 0}",
-      three: "${goodData.bid!['3'] ?? 0}",
-      five: "${goodData.bid!['5'] ?? 0}",
-      ten: "${goodData.bid!['10'] ?? 0}",
-      thirty: "${goodData.bid!['30'] ?? 0}",
+      total: "${goodData.total ?? 1}",
+      three: "${goodData.three ?? 1}",
+      five: "${goodData.five ?? 1}",
+      ten: "${goodData.ten ?? 1}",
+      thirty: "${goodData.thirty ?? 1}",
     );
   }
 

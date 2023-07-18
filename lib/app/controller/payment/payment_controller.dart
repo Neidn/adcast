@@ -1,10 +1,13 @@
 import 'dart:convert';
 
+import 'package:adcast/app/controller/profile/profile_controller.dart';
 import 'package:adcast/app/data/model/api/api_response.dart';
 import 'package:adcast/app/data/model/payment/bank_data.dart';
+import 'package:adcast/app/data/model/payment/bid_data.dart';
 import 'package:adcast/app/data/model/payment/good_data.dart';
 import 'package:adcast/app/data/model/payment/payment_data.dart';
 import 'package:adcast/app/data/repository/payment_data_impl.dart';
+import 'package:adcast/app/services/auth_service.dart';
 import 'package:adcast/app/storage/db/bank_table.dart';
 import 'package:adcast/app/storage/db/goods_table.dart';
 import 'package:adcast/app/storage/device/device_token_storage.dart';
@@ -78,7 +81,11 @@ class PaymentController extends GetxController {
           name: key,
           price: value['price'],
           api: value['api'],
-          bid: value['bid'],
+          total: value['bid']['total'],
+          three: value['bid']['3'],
+          five: value['bid']['5'],
+          ten: value['bid']['10'],
+          thirty: value['bid']['30'],
         ));
       });
 
@@ -92,11 +99,7 @@ class PaymentController extends GetxController {
 
       await bankTable.banksDataInsert(bankData);
     } catch (e) {
-      Get.snackbar(
-        'Error',
-        e.toString(),
-        snackPosition: SnackPosition.BOTTOM,
-      );
+      print(e.toString());
     }
   }
 
@@ -112,25 +115,33 @@ class PaymentController extends GetxController {
       final List<GoodData> goodDataList = [];
 
       for (var element in goodsDataList) {
-        final newGoodData = GoodData(
+        if (element['name'] == ProfileController.to.userInfoData.goods) {
+          ProfileController.to.maxBidData = BidData(
+            total: element['total'],
+            three: element['three'],
+            five: element['five'],
+            ten: element['ten'],
+            thirty: element['thirty'],
+          );
+        }
+
+        goodDataList.add(GoodData(
           id: element['id'],
           api: element['api'],
           name: element['name'],
           price: element['price'],
-          // Json to Map
-          bid: jsonDecode(element['bid']),
-        );
-        goodDataList.add(newGoodData);
+          total: element['total'],
+          three: element['three'],
+          five: element['five'],
+          ten: element['ten'],
+          thirty: element['thirty'],
+        ));
       }
 
       goodsData = goodDataList;
       return goodDataList;
     } catch (e) {
-      Get.snackbar(
-        'Error',
-        e.toString(),
-        snackPosition: SnackPosition.BOTTOM,
-      );
+      print(e.toString());
       return [];
     }
   }
@@ -146,11 +157,7 @@ class PaymentController extends GetxController {
 
       bankData = BankData.fromJson(bankDataList.first);
     } catch (e) {
-      Get.snackbar(
-        'Error',
-        e.toString(),
-        snackPosition: SnackPosition.BOTTOM,
-      );
+      print(e.toString());
     }
   }
 }

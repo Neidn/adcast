@@ -120,7 +120,11 @@ const Map<String, Map<String, String>> appDatabaseTable = {
     'name': 'TEXT',
     'api': 'TEXT',
     'price': 'TEXT',
-    'bid': 'JSON',
+    'total': 'TEXT',
+    'three': 'TEXT',
+    'five': 'TEXT',
+    'ten': 'TEXT',
+    'thirty': 'TEXT',
   },
   appBidInfoTable: {
     'total': 'TEXT',
@@ -157,6 +161,9 @@ const Map<String, List<String>> appDatabaseIndexes = {
   appUserApiTable: [
     "id",
     "customer_id",
+  ],
+  appGoodsInfoTable: [
+    "id",
   ],
   appBankInfoTable: [
     "id",

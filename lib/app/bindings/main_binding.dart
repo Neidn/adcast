@@ -12,22 +12,16 @@ import '/app/controller/keyword/keyword_controller.dart';
 import '/app/controller/profile/profile_controller.dart';
 
 class MainBinding implements Bindings {
-  final AuthService authService = AuthService();
-
   @override
   void dependencies() {
     // give dependency to navigation bar widget
     Get.put(MainController());
 
-    final bool authenticated = AuthService.to.authenticated;
-
-    if (authenticated) {
-      // give dependency
-      Get.put(CampaignController());
-      Get.put(GroupController());
-      Get.put(KeywordController());
-      Get.put(ProfileController());
-      Get.put(PaymentController());
-    }
+    // give dependency
+    Get.put(CampaignController());
+    Get.put(GroupController());
+    Get.put(KeywordController());
+    Get.put(ProfileController());
+    Get.put(PaymentController());
   }
 }

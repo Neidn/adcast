@@ -22,7 +22,7 @@ class CommonTextFormFieldWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final inputBorder = OutlineInputBorder(
-      borderRadius: BorderRadius.circular(30),
+      borderRadius: BorderRadius.circular(10),
       borderSide: const BorderSide(
         color: Colors.white60,
       ),

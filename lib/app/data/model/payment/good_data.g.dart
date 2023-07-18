@@ -11,7 +11,11 @@ GoodData _$GoodDataFromJson(Map<String, dynamic> json) => GoodData(
       name: json['name'] as String?,
       api: json['api'] as String?,
       price: json['price'] as String?,
-      bid: json['bid'] as Map<String, dynamic>?,
+      total: json['total'] as String?,
+      three: json['three'] as String?,
+      five: json['five'] as String?,
+      ten: json['ten'] as String?,
+      thirty: json['thirty'] as String?,
     );
 
 Map<String, dynamic> _$GoodDataToJson(GoodData instance) => <String, dynamic>{
@@ -19,5 +23,9 @@ Map<String, dynamic> _$GoodDataToJson(GoodData instance) => <String, dynamic>{
       'name': instance.name,
       'api': instance.api,
       'price': instance.price,
-      'bid': instance.bid,
+      'total': instance.total,
+      'three': instance.three,
+      'five': instance.five,
+      'ten': instance.ten,
+      'thirty': instance.thirty,
     };

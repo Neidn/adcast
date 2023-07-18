@@ -1,3 +1,5 @@
+import 'package:adcast/app/controller/main/main_controller.dart';
+import 'package:adcast/app/ui/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -25,9 +27,29 @@ class LoginPage extends GetView<LoginController> {
                   // Logo
                   Flexible(
                     flex: 2,
-                    child: SizedBox(
-                      width: Get.width * 0.5,
-                      child: Image.asset('assets/images/logo.png'),
+                    child: Stack(
+                      children: [
+                        Container(
+                          margin: const EdgeInsets.all(16.0),
+                          width: double.infinity,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(20),
+                            color: Colors.grey[200],
+                          ),
+                          child: Container(
+                            width: Get.width * 0.5,
+                            alignment: Alignment.center,
+                            decoration: const BoxDecoration(
+                              image: DecorationImage(
+                                image: AssetImage(
+                                  'assets/images/logo.png',
+                                ),
+                                fit: BoxFit.contain,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
 
@@ -69,13 +91,23 @@ class LoginPage extends GetView<LoginController> {
                         const SizedBox(height: 20),
                         _.isLoading
                             ? const CircularProgressIndicator()
-                            : ElevatedButton(
-                                onPressed: () {
-                                  if (_.loginFormKey.currentState!.validate()) {
-                                    _.login();
-                                  }
-                                },
-                                child: const Text('Login'),
+                            // Login Button Width: Max
+                            : SizedBox(
+                                width: double.infinity,
+                                child: ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                  ),
+                                  onPressed: () {
+                                    if (_.loginFormKey.currentState!
+                                        .validate()) {
+                                      _.login();
+                                    }
+                                  },
+                                  child: const Text('Login'),
+                                ),
                               ),
                         const SizedBox(height: 24),
                       ],

@@ -80,11 +80,11 @@ class PaymentGoodsTable extends StatelessWidget {
     final int api = int.tryParse(goodData.api!) ?? 0;
 
     final BidData bid = BidData(
-      total: "${goodData.bid!['total'] ?? 0}",
-      three: "${goodData.bid!['3'] ?? 0}",
-      five: "${goodData.bid!['5'] ?? 0}",
-      ten: "${goodData.bid!['10'] ?? 0}",
-      thirty: "${goodData.bid!['30'] ?? 0}",
+      total: "${goodData.total ?? 0}",
+      three: "${goodData.three ?? 0}",
+      five: "${goodData.five ?? 0}",
+      ten: "${goodData.ten ?? 0}",
+      thirty: "${goodData.thirty ?? 0}",
     );
 
     final int totalKeywordCount =

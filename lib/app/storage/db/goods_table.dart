@@ -41,12 +41,9 @@ class GoodsTable extends TableHelper {
     await database.transaction((txn) async {
       Batch batch = txn.batch();
       for (var element in data) {
-        final newMap = element.toJson();
-        newMap['bid'] = jsonEncode(newMap['bid']);
-
         batch.insert(
           tableName,
-          newMap,
+          element.toJson(),
           conflictAlgorithm: ConflictAlgorithm.replace,
         );
       }
