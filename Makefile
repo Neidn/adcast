@@ -10,4 +10,8 @@ build:
 watch:
 	dart run build_runner watch
 
-.PHONY: createSplash removeSplash build watch
+androidBuild:
+	flutter build appbundle --no-tree-shake-icons
+
+
+.PHONY: createSplash removeSplash build watch androidBuild

@@ -1,4 +1,4 @@
-package com.innopost.adcast
+package com.innopost.Adcast
 
 import io.flutter.embedding.android.FlutterActivity
 
